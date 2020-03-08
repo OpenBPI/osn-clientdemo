@@ -12,5 +12,5 @@ TODO
 * OSN-IMSDemo与OSN-connector之间进行通信，请参见[OSN-connector](https://github.com/OpenBPI/osn-connector)接口文档  
 * OSN-IMSDemo与客户端的通信文档见[interface.md](./interface.md)
 ## 更新
-2020-03-08 完成账号生成、添加好友、加密消息发送功能。  
+2020-03-08 完成账号生成、添加好友、跨界加密消息发送功能。  
 
