@@ -1,0 +1,54 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/base_theme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="create_user_input" parent="@style/match.wrap">
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/bg_55</item>
+        <item name="android:background">@null</item>
+        <item name="android:textSize">@dimen/sp_15</item>
+        <item name="android:textColorHint">@color/bg_98</item>
+        <item name="android:paddingTop">@dimen/dp_10</item>
+        <item name="android:paddingBottom">@dimen/dp_10</item>
+        <!--<item name="android:layout_marginLeft">@dimen/dp_70</item>-->
+    </style>
+
+    <style name="create_line" parent="hor_lin">
+        <item name="android:background">@color/bg_BF</item>
+        <item name="android:layout_marginTop">@dimen/dp_5</item>
+    </style>
+
+    <style name="login_btn" parent="@style/match.wrap">
+        <item name="android:textColor">@color/bg_20253A</item>
+        <item name="android:textSize">@dimen/sp_18</item>
+        <item name="android:background">@drawable/bg_login_btn</item>
+        <item name="android:layout_marginLeft">@dimen/dp_12</item>
+        <item name="android:layout_marginRight">@dimen/dp_12</item>
+    </style>
+
+    <style name="service_title" parent="wrap">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginLeft">@dimen/dp_12</item>
+        <item name="android:layout_marginTop">@dimen/dp_15</item>
+    </style>
+
+    <style name="list" parent="match">
+        <item name="android:background">@color/white</item>
+        <item name="android:overScrollMode">never</item>
+        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:scrollingCache">false</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+        <!--<item name="android:layout_marginLeft">@dimen/dp_12</item>
+        <item name="android:layout_marginRight">@dimen/dp_12</item>-->
+    </style>
+</resources>

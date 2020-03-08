@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">base</string>
+    <string name="permission_hint">应用%1$s请求%2$s权限，以保证应用的相应功能可以正常使用；请授予应用必要的权限！</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="scan_title">扫码二维码</string>
+    <string name="hint">提示</string>
+    <string name="dont_null">%1s不能为空</string>
+    <string name="address_input_hint">%1s不是正确的链接，如：http/https开头</string>
+    <string name="success_hint">%1$s成功</string>
+    <string name="failed_hint">%1$s失败</string>
+</resources>

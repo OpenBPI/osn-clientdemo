@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/match.ver_linear"
+    android:fitsSystemWindows="true"
+    android:background="@color/white">
+    <include layout="@layout/include_home_topmenu"/>
+
+    <LinearLayout
+        style="@style/match.wrap.hor_linear"
+        android:layout_marginTop="@dimen/dp_50"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_30"
+        android:layout_marginStart="@dimen/dp_30">
+        <TextView
+            style="@style/wrap"
+            android:text="@string/mine_nick"
+            android:textSize="@dimen/sp_15"
+            android:textColor="@color/bg_55"/>
+        <TextView
+            android:id="@+id/nickName"
+            style="@style/match.wrap"
+            android:gravity="right"
+            android:textColor="@color/bg_98"
+            tools:text="@string/mine_nick"
+            android:textSize="@dimen/sp_12"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_10"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/match.wrap.hor_linear"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_30"
+        android:layout_marginStart="@dimen/dp_30">
+        <TextView
+            style="@style/wrap"
+            android:text="@string/mine_sign"
+            android:textSize="@dimen/sp_15"
+            android:textColor="@color/bg_55"/>
+        <TextView
+            android:id="@+id/sign"
+            style="@style/match.wrap"
+            android:maxHeight="@dimen/dp_80"
+            android:gravity="right"
+            android:textColor="@color/bg_98"
+            tools:text="@string/mine_sign"
+            android:textSize="@dimen/sp_12"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_10"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/d2img"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        tools:src="@mipmap/ic_launcher"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>

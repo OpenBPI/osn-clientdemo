@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        style="@style/match.wrap.hor_linear"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/dp_5">
+    <TextView
+        android:id="@+id/item_head"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:gravity="center"
+        tools:text="杨"
+        tools:background="@drawable/bg_circle"
+        android:textSize="@dimen/sp_20"
+        android:textColor="@color/white"
+        android:layout_marginStart="@dimen/dp_25"
+        android:layout_marginLeft="@dimen/dp_25"/>
+
+        <LinearLayout
+            style="@style/match.wrap.ver_linear"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/dp_20">
+            <TextView
+                android:id="@+id/item_nick"
+                tools:text="@string/success_hint"
+                android:textSize="@dimen/sp_15"
+                android:textColor="@color/bg_55"
+                style="@style/wrap"/>
+            <TextView
+                android:id="@+id/item_friendId"
+                style="@style/wrap"
+                android:textColor="@color/bg_98"
+                android:textSize="@dimen/sp_13"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="@string/contact_remark"
+                android:layout_marginTop="@dimen/dp_5"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/item_edit"
+            style="@style/wrap"
+            android:text="@string/update_hint"
+            android:textColor="@color/bg_1484ED"
+            android:layout_marginRight="@dimen/dp_25"
+            android:layout_marginEnd="@dimen/dp_25"/>
+    </LinearLayout>
+
+    <View style="@style/create_line"
+        android:layout_marginLeft="@dimen/dp_50"/>
+</LinearLayout>

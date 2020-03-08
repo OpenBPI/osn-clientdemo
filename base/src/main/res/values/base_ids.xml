@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="base_top_toolbar" type="id"/>
+    <item name="iv_back" type="id"/>
+    <item name="ic_top_back" type="mipmap"/>
+</resources>

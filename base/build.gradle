@@ -1,0 +1,58 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        debug{
+
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    api 'androidx.multidex:multidex:2.0.1'
+    api 'androidx.multidex:multidex-instrumentation:2.0.0'
+    api 'androidx.appcompat:appcompat:1.1.0'
+    api 'com.google.zxing:core:3.3.0'
+    api 'com.google.code.gson:gson:2.8.5'
+    api 'com.android.volley:volley:1.1.1'
+    api 'com.chanven.lib:cptr:1.1.0'
+    api files('libs/sun.misc.BASE64Decoder.jar')
+    //用于生成助记词
+    api 'org.web3j:core:3.3.1-android'
+    implementation 'io.github.novacrypto:BIP39:0.1.9'
+    api group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.54'
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.9'
+    implementation group: 'org.bitcoinj', name: 'bitcoinj-core', version: '0.14.6'
+    //用于生成助记词 end
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}

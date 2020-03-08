@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginLeft="25dip"
+    android:layout_marginRight="25dip"
+    android:orientation="vertical"
+    android:background="@drawable/bg_white_circle_shape">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_13"
+        android:paddingRight="@dimen/dp_13">
+
+        <TextView
+            android:id="@+id/tv_dg_double_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            tools:text="测试"
+            android:textColor="@color/bg_20253A"
+            android:lineSpacingExtra="5dip"
+            android:paddingTop="20dip" />
+
+        <TextView
+            android:id="@+id/tv_dg_double_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dip"
+            android:layout_marginTop="10dip"
+            android:textColor="@color/bg_20253A"
+            tools:text="技术等级多少分了积淀的"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="5dip"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <View
+        style="@style/hor_lin"
+        android:background="@color/bg_dd"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_dg_blue_singel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/bg_33"
+            android:padding="14dip"
+            android:text="@string/confirm" />
+<!--        android:background="@drawable/bg_dialog_single_confirm"-->
+
+        <LinearLayout
+            android:id="@+id/ll_dg_blue_double"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_dg_blue_cancel"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/bg_66"
+                android:gravity="center"
+                android:paddingBottom="14dip"
+                android:paddingTop="14dip"
+                android:text="@string/cancel" />
+<!--            android:background="@drawable/bg_dialog_cancel"-->
+
+            <View
+                style="@style/ver_lin"
+                android:background="@color/bg_dd"/>
+
+            <TextView
+                android:id="@+id/tv_dg_blue_confirm"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/bg_33"
+                android:gravity="center"
+                android:padding="14dip"
+                android:text="@string/confirm" />
+            <!--android:background="@drawable/bg_dialog_confirm"-->
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

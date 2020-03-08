@@ -1,0 +1,91 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+    defaultConfig {
+        applicationId 'cn.leiyu.osn_clientdemo'
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug{
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    signingConfigs{
+        debug {
+            storeFile file(storePath)
+            storePassword = storePwd
+            keyAlias = _keyAlias
+            keyPassword = keyPwd
+        }
+    }
+
+    android.applicationVariants.all {
+        it.outputs.all {out->
+            out.outputFileName "${getRootDir().name}_${productFlavors[0].name}_${versionName}_${it.buildType.name}.apk"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    flavorDimensions 'product'
+    productFlavors {
+        momo {
+            dimension = 'product'
+            manifestPlaceholders = ["appName": "陌陌Demo","appIcon":"@mipmap/ic_momo"]
+            applicationIdSuffix = '.momo'
+            resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
+        }
+        dingding{
+            dimension = 'product'
+            manifestPlaceholders = ["appName": "钉钉Demo","appIcon":"@mipmap/ic_dingding"]
+            applicationIdSuffix = '.dingding'
+            resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
+        }
+        wx{
+            dimension = 'product'
+            manifestPlaceholders = ["appName": "微信Demo","appIcon":"@mipmap/bor"]
+            applicationIdSuffix = '.wx'
+            resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
+        }
+        normal{
+            dimension = 'product'
+            resValue("string", "initUrl", "http://106.13.82.20:8100/ims")
+            manifestPlaceholders = ["appName": "@string/app_name","appIcon":"@mipmap/ic_launcher"]
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    kapt 'com.jakewharton:butterknife-compiler:10.2.0'
+    implementation project(':base')
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}

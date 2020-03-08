@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">IM移动端操作系统</string>
+    <string name="register">注册</string>
+    <string name="login">登陆</string>
+    <string name="userName">用户名</string>
+    <string name="inputUName">请输入用户名</string>
+    <string name="inputPwd">请输入密码</string>
+    <string name="confirmPwd">请确认密码</string>
+    <string name="confirmPwdError">两次密码输入不一致</string>
+    <string name="pwdError">密码输入错误</string>
+    <string name="userError">该用户不存在</string>
+    <string name="userError1">该用户已存在</string>
+    <string name="confirmHint">确认</string>
+    <string name="input_hint">请输入%1$s</string>
+    <string name="mine_title">我的</string>
+    <string name="mine_nick">昵称</string>
+    <string name="mine_sign">个性签名</string>
+    <string name="contact_title">通讯录</string>
+    <string name="contact_add">添加好友</string>
+    <string name="contact_id">朋友ID</string>
+    <string name="contact_remark">备注</string>
+    <string name="msg_title">消息</string>
+    <string name="setConnection">设置连接</string>
+    <string name="setUrl">设置URL</string>
+    <string name="update_hint">修改%1$s</string>
+    <string name="sendMsg">发送</string>
+    <string name="draft_hint">&lt;font color = "red"&gt;[草稿]&lt;/font&gt;%1$s</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <!--85-->
+    <color name="bg_55">#555555</color>
+    <!--112-->
+    <color name="bg_70">#707070</color>
+    <!--152-->
+    <color name="bg_98">#989898</color>
+    <!--191-->
+    <color name="bg_BF">#BFBFBF</color>
+
+    <!--238-->
+    <color name="bg_EE">#EEEEEE</color>
+</resources>

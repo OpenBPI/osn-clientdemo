@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+    <include layout="@layout/base_top_toolbar"/>
+
+    <EditText
+        android:id="@+id/score_address"
+        style="@style/create_user_input"
+        android:hint="@string/setUrl"
+        android:singleLine="false"
+        android:maxHeight="@dimen/dp_80"
+        android:layout_marginTop="@dimen/dp_60"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginStart="@dimen/dp_12"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_12"/>
+    <View style="@style/create_line"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginStart="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_12"/>
+    <!--<ScrollView
+        android:id="@+id/scrollView"
+        style="@style/match"
+        android:overScrollMode="never">
+        <LinearLayout
+            style="@style/match.wrap.ver_linear">
+            <TextView
+                style="@style/service_title"
+                android:text="@string/score_address"/>
+
+            <TextView
+                style="@style/service_title"
+                android:text="@string/candy_address" />
+            <EditText
+                android:id="@+id/candy_address"
+                style="@style/service_input"
+                tools:text="http://www.baidu.com/candy"/>
+            <View style="@style/service_line"/>
+
+            <TextView
+                style="@style/service_title"
+                android:text="@string/log_address"/>
+            <EditText
+                android:id="@+id/log_address"
+                style="@style/service_input"
+                tools:text="http://www.baidu.com/log"/>
+            <View style="@style/service_line"/>
+        </LinearLayout>
+    </ScrollView>-->
+</LinearLayout>

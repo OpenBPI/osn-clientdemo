@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_88000000">#88000000</color>
+    <color name="bg_33">#333333</color>
+    <color name="bg_99">#999999</color>
+    <color name="bg_66">#666666</color>
+    <color name="bg_dd">#dddddd</color>
+
+    <!-- 主题色 rgb(32.37,58)-->
+    <color name="bg_20253A">#20253A</color>
+    <color name="bg_FF9331">#FF9331</color>
+
+    <!--17-->
+    <color name="bg_11">#111111</color>
+    <!--20 132 237-->
+    <color name="bg_1484ED">#1484ED</color>
+</resources>

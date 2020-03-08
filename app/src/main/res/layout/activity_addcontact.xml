@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/match.ver_linear"
+    android:fitsSystemWindows="true">
+    <include layout="@layout/base_top_toolbar"/>
+
+    <LinearLayout
+        style="@style/match.wrap.hor_linear"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_60">
+        <EditText
+            android:id="@+id/friendId"
+            style="@style/create_user_input"
+            android:singleLine="false"
+            android:maxHeight="@dimen/dp_80"
+            tools:text="\n\n\nn\n\n"
+            android:hint="@string/contact_id"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/scanFriend"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:src="@mipmap/ic_scan"
+            android:scaleType="fitCenter"/>
+
+    </LinearLayout>
+    <View style="@style/create_line"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_12"/>
+
+    <EditText
+        android:id="@+id/friendNick"
+        android:hint="@string/mine_nick"
+        android:layout_marginTop="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_12"
+        tools:text="jdifdflsfds"
+        style="@style/create_user_input"/>
+    <View style="@style/create_line"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_12"/>
+
+    <EditText
+        android:id="@+id/remark"
+        android:hint="@string/contact_remark"
+        android:layout_marginTop="@dimen/dp_15"
+        style="@style/create_user_input"
+        android:maxHeight="@dimen/dp_80"
+        android:singleLine="false"
+        tools:text="\n\n\n\n\n"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_12"/>
+    <View style="@style/create_line"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_12"/>
+</LinearLayout>

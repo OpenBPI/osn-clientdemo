@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topMenu"
+    style="@style/match.wrap.hor_linear"
+    android:layout_marginLeft="@dimen/dp_12"
+    android:layout_marginRight="@dimen/dp_12"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/dp_50">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/wrap"
+        android:textColor="@color/bg_11"
+        android:textSize="@dimen/sp_25"
+        tools:text="@string/login" />
+
+    <TextView
+        style="@style/wrap.match"
+        android:layout_weight="1"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        style="@style/wrap"
+        android:gravity="center_vertical|right"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/opera"
+            style="@style/wrap"
+            android:background="@drawable/bg_white_shape"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_3"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_3"
+            android:textSize="@dimen/sp_14"
+            tools:text="@string/userName" />
+
+        <TextView
+            style="@style/wrap"
+            android:layout_marginTop="@dimen/dp_2"
+            android:text="@string/app_name"
+            android:textColor="@color/bg_1484ED"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+</LinearLayout>
