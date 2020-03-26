@@ -2,7 +2,8 @@ package cn.leiyu.osn_clientdemo.activity.home
 
 import android.app.Activity
 import android.content.Intent
-import android.view.View
+import android.os.Bundle
+import android.view.*
 import android.widget.ListView
 import android.widget.TextView
 import butterknife.BindView
@@ -10,7 +11,6 @@ import butterknife.OnClick
 import butterknife.OnItemClick
 import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.base.utils.BaseRefreshUtil
-import cn.leiyu.base.utils.LogUtil
 import cn.leiyu.base.utils.encoded.EcKeyUtils
 import cn.leiyu.base.utils.encoded.EcSignUtil
 import cn.leiyu.osn_clientdemo.MainActivity
@@ -24,7 +24,7 @@ import cn.leiyu.osn_clientdemo.beans.UserBean
 import cn.leiyu.osn_clientdemo.db.LocalDBManager
 import cn.leiyu.osn_clientdemo.db.tables.UserOperaDao
 import com.chanven.lib.cptr.PtrClassicFrameLayout
-import java.security.interfaces.ECPublicKey
+
 
 /**
  * 主界面 - 通讯录布局
@@ -35,18 +35,21 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
     lateinit var title: TextView
     @BindView(R.id.opera)
     lateinit var addFriend: TextView
+    @BindView(R.id.opera1)
+    lateinit var addGroup: TextView
     @BindView(android.R.id.list)
     lateinit var listView: ListView
     @BindView(R.id.refresh_view)
     lateinit var refreshView: PtrClassicFrameLayout
     private lateinit var refreshUtil: BaseRefreshUtil<HomeFragment>
-    private lateinit var user: UserBean
+    //private lateinit var user: UserBean
     private lateinit var userOperaDao: UserOperaDao
     private var adapter: ContactAdapter? = null
     private var page: Int = 1
 
     companion object{
         var gPrivateKey = ""//byteArrayOf()
+        lateinit var user:UserBean
     }
 
     override fun getLayoutId(): Int {
@@ -57,6 +60,7 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
         super.initView()
         title.text = getString(R.string.contact_title)
         addFriend.text = getString(R.string.contact_add)
+        addGroup.text = "添加群组"
         refreshUtil = BaseRefreshUtil(this, refreshView)
         refreshUtil.initView()
         initData()
@@ -81,7 +85,6 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
 //        val rData = String(dcData)
 //        val encData = EcKeyUtils.ECEncrypt(publicKey, testData.toByteArray())
 //        val decData = EcKeyUtils.ECDecrypt(privateKey, encData)
-//        LogUtil.e("test","data="+decData)
     }
 
     @OnItemClick(android.R.id.list)
@@ -91,12 +94,19 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
             (activity as? MainActivity)!!.FLAG_SEND)
     }
 
-    @OnClick(R.id.opera)
+    @OnClick(R.id.opera, R.id.opera1)
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.opera->{
-                startActivityForResult(Intent(mContext!!, AddContactActivity::class.java),
-                    102)
+            R.id.opera-> {
+                startActivityForResult(
+                    Intent(mContext!!, AddContactActivity::class.java),
+                    102
+                )
+            }
+            R.id.opera1->{
+                val intent = Intent(mContext!!, AddContactActivity::class.java)
+                intent.putExtra("data", "group")
+                startActivityForResult(intent,103)
             }
             else-> super.onClick(v)
         }
@@ -119,7 +129,7 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == 102 && resultCode == Activity.RESULT_OK){
+        if((requestCode == 102 || requestCode == 103) && resultCode == Activity.RESULT_OK){
             //重新加载
             onPullDownRefresh()
         }else

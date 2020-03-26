@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Message
+import android.util.JsonReader
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
@@ -21,6 +22,10 @@ import cn.leiyu.osn_clientdemo.activity.mine.ServiceAddressActivity
 import cn.leiyu.osn_clientdemo.adapters.HomePageAdapter
 import cn.leiyu.osn_clientdemo.beans.MsgBean
 import com.android.volley.VolleyError
+import com.fasterxml.jackson.core.JsonParser
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import org.json.JSONObject
 
 /**
  * 程序主页
@@ -110,6 +115,7 @@ class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
             """{"command":"login", "user":"${getUser().address}"}""",
             object: VolleyListenerInterface(this, mListener, mErrorListener){
                 override fun onMySuccess(result: String?) {
+                    IMProtocol.setServiceOSNID(result!!)
                     send()
                 }
 

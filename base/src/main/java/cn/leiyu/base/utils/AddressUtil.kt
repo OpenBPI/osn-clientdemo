@@ -2,8 +2,12 @@
 package cn.leiyu.base.utils
 
 import cn.leiyu.base.utils.encoded.EcKeyUtils
+import cn.leiyu.base.utils.encoded.EcKeyUtils.bytesToHex
+import cn.leiyu.base.utils.encoded.EcUtils
+import org.bitcoinj.core.Base58
 import org.bitcoinj.crypto.ChildNumber
 import java.lang.Thread.sleep
+import kotlin.experimental.and
 
 /**
  * 身份目录
@@ -31,6 +35,16 @@ class AddressUtil constructor(private val filesDir: String) {
 
     var address: Array<String?> = arrayOfNulls(2)
 
+    companion object {
+        fun isGroup(osnid: String): Boolean{
+            val osn = osnid.substring(3)
+            val data = Base58.decode(osn)
+            val flag = (data[0].toInt() and 0x80)
+            if(flag == 0)
+                return false
+            return true
+        }
+    }
     /**
      * 生成助记词
      */
@@ -58,7 +72,20 @@ class AddressUtil constructor(private val filesDir: String) {
         }
         return params[0]
     }
-
+    fun genGroupID(mnemonicStr: String, accType: String): Array<String>?{
+        val params = createPub(mnemonicStr, accType)
+        if (!EcKeyUtils.savePrivateKey(params[1], null,  "${this.filesDir}$EC_DIR", "${params[0]}$KEY_END_WITH")) {
+            return null
+        }
+        if (!EcKeyUtils.savePrivateKey(params[2], null, "${this.filesDir}$SHADOW_DIR", "${params[0]}$KEY_END_WITH")) {
+            return null
+        }
+        val privateShadowKey = EcKeyUtils.getEcPrivateKeyFromHex(params[2])
+        val publickey = EcKeyUtils.getPublicKeyFromPrivateKey(privateShadowKey)
+        val publicByte = EcUtils.EcPublicKey2Bytes(publickey)
+        val publicKeyStr = bytesToHex(publicByte);
+        return arrayOf(params[3], params[1], publicKeyStr, params[3])
+    }
     fun genWallet(mnemonicStr: String, pwd: String): String?{
         val params = createPub(mnemonicStr)
         address[1] = params[3]
@@ -84,7 +111,7 @@ class AddressUtil constructor(private val filesDir: String) {
         return params[0]
     }
 
-    private fun createPub(mnemonicStr: String): Array<String>{
+    private fun createPub(mnemonicStr: String, accType: String = ""): Array<String>{
         // 使用master衍生出keypair 用于通信 登陆  m/23/1
         val path1 = arrayOf(ChildNumber(23, true), ChildNumber(1, false))
         val subPrivateKeyStr1 = EcKeyUtils.GenSubPrivateKey(mnemonicStr, path1)
@@ -93,7 +120,7 @@ class AddressUtil constructor(private val filesDir: String) {
         val subPrivateKeyStr2 = EcKeyUtils.GenSubPrivateKey(mnemonicStr, path2)
         // 加密私钥
         // 生成复合地址
-        val address = EcKeyUtils.GenCompositeAddress(subPrivateKeyStr1, subPrivateKeyStr2)
+        val address = EcKeyUtils.GenCompositeAddress(subPrivateKeyStr1, subPrivateKeyStr2, accType)
         return arrayOf(mnemonicStr, subPrivateKeyStr1, subPrivateKeyStr2, address)
     }
 }

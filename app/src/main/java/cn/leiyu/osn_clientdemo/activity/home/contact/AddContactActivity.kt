@@ -3,19 +3,23 @@ package cn.leiyu.osn_clientdemo.activity.home.contact
 import android.app.Activity
 import android.content.Intent
 import android.database.SQLException
+import android.os.Handler
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
 import butterknife.BindView
 import butterknife.OnClick
+import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.base.utils.LogUtil
+import cn.leiyu.osn_clientdemo.IMProtocol
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.activity.SubBaseActivity
+import cn.leiyu.osn_clientdemo.activity.home.HomeFragment
 import cn.leiyu.osn_clientdemo.beans.UserBean
 import cn.leiyu.osn_clientdemo.db.LocalDBManager
 import cn.leiyu.osn_clientdemo.db.tables.UserOperaDao
 import cn.leiyu.osn_clientdemo.utils.ProductLableUtil
-import com.google.gson.Gson
 import com.google.zxing.CaptureActivity
 
 /**
@@ -29,8 +33,12 @@ open class AddContactActivity: SubBaseActivity() {
     lateinit var friendNick: EditText
     @BindView(R.id.remark)
     lateinit var remark: EditText
+    @BindView(R.id.scanFriend)
+    lateinit var scan: ImageView
     //是否添加成功
     protected var isSuccess = false
+    private val addType: String ? by lazy { intent.getStringExtra("data") }
+    private var id: Array<String>? = null
 
     override fun getLayoutId(): Int {
         return R.layout.activity_addcontact
@@ -39,6 +47,13 @@ open class AddContactActivity: SubBaseActivity() {
     override fun initView() {
         topTitle.text = getString(R.string.contact_add)
         topMenu.text = getString(R.string.confirm)
+        if(addType != null && addType.equals("group")) {
+            topTitle.text = "添加群组"
+            val addressUtil = AddressUtil(this.filesDir.absolutePath)
+            id = addressUtil.genGroupID(addressUtil.createWord(), "group")
+            friendId.setText(id?.get(0))
+            scan.visibility = View.INVISIBLE
+        }
     }
 
     override fun initData() {
@@ -54,7 +69,10 @@ open class AddContactActivity: SubBaseActivity() {
             }
             R.id.toolbar_menu->{
                 try {
-                    checkFriend(v)
+                    if(addType != null && addType.equals("group"))
+                        checkGroup(v)
+                    else
+                        checkFriend(v)
                 }catch (e: Exception){
                     e.printStackTrace()
                     v.isEnabled = true
@@ -84,11 +102,35 @@ open class AddContactActivity: SubBaseActivity() {
         super.onBackPressed()
     }
 
+    protected open fun checkGroup(v: View){
+        if(IMProtocol.serviceID == ""){
+            showToast("服务号为空")
+            setResult(Activity.RESULT_OK)
+            finish()
+            return
+        }
+        val login = getUser()
+        val bean = UserBean(loginId = login.loginId, loginName = "",
+            address = HomeFragment.user.address, nickName = friendNick.text.toString().trim(), remark = remark.text.toString().trim(),
+            lableColor = ProductLableUtil.getLableColor())
+        var handler : Handler = Handler{
+            if(it.obj.equals("true")){
+                LocalDBManager(this).getTableOperation(UserOperaDao::class.java).insertUser(bean)
+                showToast("添加成功")
+            }
+            else
+                showToast("添加失败")
+            setResult(Activity.RESULT_OK)
+            finish()
+            false
+        }
+        IMProtocol.addGroup(this, handler, bean, id!!)
+    }
     protected open fun checkFriend(v: View){
         //ID必传
         val params = arrayOfNulls<String>(3)
         params[0] = friendId.text.toString().trim()
-        if(TextUtils.isEmpty(params[0])){
+        if (TextUtils.isEmpty(params[0]) && addType == null) {
             showToast(getString(R.string.input_hint, getString(R.string.contact_id)))
             return
         }
@@ -105,7 +147,7 @@ open class AddContactActivity: SubBaseActivity() {
             address = params[0]!!, nickName = params[1]!!, remark = params[2],
             lableColor = ProductLableUtil.getLableColor())
         val hintId = try{
-            //存库
+                //存库
             LocalDBManager(this).getTableOperation(UserOperaDao::class.java).insertUser(bean)
             //返回是更新界面
             isSuccess = true
@@ -122,5 +164,7 @@ open class AddContactActivity: SubBaseActivity() {
         //解禁 给出提示
         v.isEnabled = true
         showToast(getString(hintId, getString(R.string.contact_add)))
+        setResult(Activity.RESULT_OK, null)
+        finish()
     }
 }

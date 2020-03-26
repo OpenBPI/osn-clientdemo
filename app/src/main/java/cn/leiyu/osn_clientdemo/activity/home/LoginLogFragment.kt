@@ -29,6 +29,8 @@ class LoginLogFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<Log
     lateinit var title: TextView
     @BindView(R.id.opera)
     lateinit var opera: TextView
+    @BindView(R.id.opera1)
+    lateinit var nouse: TextView
     @BindView(android.R.id.list)
     lateinit var listView: ListView
     @BindView(R.id.refresh_view)
@@ -48,6 +50,7 @@ class LoginLogFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<Log
         super.initView()
         title.text = getString(R.string.msg_title)
         opera.visibility = View.INVISIBLE
+        nouse.visibility = View.INVISIBLE
         refreshUtil = BaseRefreshUtil(this, refreshView)
         refreshUtil.initView()
         initData()

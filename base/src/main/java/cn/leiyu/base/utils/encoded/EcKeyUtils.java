@@ -13,6 +13,7 @@ import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.crypto.MnemonicCode;
 import org.bitcoinj.params.MainNetParams;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.IESCipher;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.DataInputStream;
@@ -383,7 +384,7 @@ public class EcKeyUtils {
 //        System.arraycopy(pub2hash, 0, address, 66,32);
 //        return EcUtils.generateAddress(address);
 //    }
-    public static String GenCompositeAddress(String privkey, String privKeyShadow)
+    public static String GenCompositeAddress(String privkey, String privKeyShadow, String accType)
     {
         /*
          * 0x1000
@@ -396,7 +397,7 @@ public class EcKeyUtils {
         byte[] pub1 = EcUtils.EcPublicKey2Bytes(publickey);
     ////////////////////////////////////////////////////////////////////////////////////////////
     //
-        String test = "hello";
+//        String test = "hello";
     //        byte[] data = ECIESEncrypt(publickey,test.getBytes());
     //        byte[] datatest = ECIESDecrypt(prvatekey, data);
     //        String s = new String(datatest);
@@ -408,7 +409,11 @@ public class EcKeyUtils {
         byte[] pub2hash = sha256(pub2);
 
         byte[] address = new byte[2+65+32];
-        address[0] = 0x10;
+        address[0] = (byte)0x10;
+        if(accType.equalsIgnoreCase("group"))
+            address[0] |= 0x80;
+        else if(accType.equalsIgnoreCase("service"))
+            address[0] |= 0x40;
         address[1] = 0;
         System.arraycopy(pub1, 0, address, 2,65);
         System.arraycopy(pub2hash, 0, address, 67,32);
@@ -446,7 +451,7 @@ public class EcKeyUtils {
     public static String signReturnBase58(String privkey, byte[] data) throws Exception {
         ECPrivateKey prvatekey = EcKeyUtils.getEcPrivateKeyFromHex(privkey);
         byte[] signdata = EcSignUtil.signData(data, prvatekey);
-        LogUtil.e("test", bytesToHex(signdata));
+        //LogUtil.e("test", bytesToHex(signdata));
         return Base58.encode(signdata);
     }
     public static String signReturnBase64Url(String privkey, byte[] data) throws Exception {
@@ -589,12 +594,12 @@ public class EcKeyUtils {
             byte[] data = Base58.decode(base58str);
             byte[] pub = null;
             System.out.println("hexKey: " + org.bouncycastle.util.encoders.Hex.toHexString(data));
-            if (data[0] == 0x10 && data[1] == 0) {
+            //if (data[0] == 0x10 && data[1] == 0) {
                 if (data[2] == 4 && data.length >= 67) {
                     pub = new byte[65];
                     System.arraycopy(data, 2, pub, 0, 65);
                 }
-            }
+            //}
             if (pub != null) {
                 System.out.println("pub: " + org.bouncycastle.util.encoders.Hex.toHexString(pub));
                 // 转化成公钥
@@ -657,6 +662,10 @@ public class EcKeyUtils {
         }
         return sb.toString();
     }
+    public static String ECEncrypt(String osnID, byte[] data){
+        ECPublicKey pubKey = EcKeyUtils.getPulicKeyFromAddressNew(osnID);
+        return ECEncrypt(pubKey, data);
+    }
     public static String ECEncrypt(ECPublicKey publicKey, byte[] data){
         byte[] aesKey = new byte[16];
         byte[] aesIV = new byte[16];
@@ -717,14 +726,13 @@ public class EcKeyUtils {
     public static byte[] ECIESEncrypt(ECPublicKey pubkey, byte[] raw){
         try {
             //Cipher cipher = Cipher.getInstance("ECIESwithAES/NONE/PKCS7Padding", "BC");
-            Cipher cipher = Cipher.getInstance("ECIESwithAES/NONE/PKCS7Padding",
-                    new BouncyCastleProvider());
+            //Cipher cipher = Cipher.getInstance("ECIESwithAES/NONE/PKCS7Padding",new BouncyCastleProvider());
+            Cipher cipher = Cipher.getInstance("ECIES",new BouncyCastleProvider());
             cipher.init(Cipher.ENCRYPT_MODE, pubkey);
             //cipher.init(Cipher.ENCRYPT_MODE, pubkey);
             byte[] cipherText = cipher.doFinal(raw);
             return cipherText;
-        } catch (Exception e)
-        {
+        } catch (Exception e){
             return null;
         }
 
@@ -743,7 +751,6 @@ public class EcKeyUtils {
             return null;
         }
     }
-
 }
 
 

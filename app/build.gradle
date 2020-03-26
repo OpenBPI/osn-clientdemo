@@ -10,8 +10,8 @@ android {
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId 'cn.leiyu.osn_clientdemo'
-        minSdkVersion 15
-        targetSdkVersion 29
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -28,7 +28,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 
     signingConfigs{
         debug {

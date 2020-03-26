@@ -7,8 +7,8 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 29
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -48,7 +48,7 @@ dependencies {
     //用于生成助记词
     api 'org.web3j:core:3.3.1-android'
     implementation 'io.github.novacrypto:BIP39:0.1.9'
-    api group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.54'
+    api group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.64'
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.9'
     implementation group: 'org.bitcoinj', name: 'bitcoinj-core', version: '0.14.6'
     //用于生成助记词 end

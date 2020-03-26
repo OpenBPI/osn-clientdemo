@@ -34,7 +34,8 @@ abstract class BaseActivity : BaseActivityApi23(), View.OnClickListener{
         TAG = this::class.simpleName
         mContext = this
         loadViewBefore()
-        if(getLayoutId() > 0)setContentView(getLayoutId())
+        if(getLayoutId() > 0)
+            setContentView(getLayoutId())
         else{
             setContentView(R.layout.base_top_toolbar)
         }

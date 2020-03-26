@@ -51,8 +51,8 @@ public class LoginActivity extends BaseActivity {
     EditText mETUser;
     @BindView(R.id.userPwd)
     EditText mETPWD;
-    @BindView(R.id.test_import)
-    TextView mTVTest;
+//    @BindView(R.id.test_import)
+//    TextView mTVTest;
     private LocalDBManager dbManager;
 
     @Override
@@ -63,9 +63,9 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void initView() {
         ButterKnife.bind(this);
-        if(BuildConfig.DEBUG){
-            mTVTest.setVisibility(View.VISIBLE);
-        }
+//        if(BuildConfig.DEBUG){
+//            mTVTest.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override
@@ -75,7 +75,7 @@ public class LoginActivity extends BaseActivity {
                 Manifest.permission.CAMERA});
     }
 
-    @OnClick(R.id.test_import)
+    //@OnClick(R.id.test_import)
     @Override
     public void onClick(@Nullable View v) {
         switch (v.getId()){
@@ -87,9 +87,9 @@ public class LoginActivity extends BaseActivity {
                     v.setEnabled(true);
                 }
                 break;
-            case R.id.test_import:
-                readFile();
-                break;
+//            case R.id.test_import:
+//                readFile();
+//                break;
             case R.id.registerBtn:
                 startActivity(new Intent(this, CreateActivity.class));
                 break;

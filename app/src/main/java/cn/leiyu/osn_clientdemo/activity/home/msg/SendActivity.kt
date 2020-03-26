@@ -159,8 +159,9 @@ class SendActivity: SubBaseActivity(), BaseRefreshUtil.IRefreshCallback<SendActi
 //                """{"msgType":"sendmsg", "userID":"${userBean.address}",
 //                |"peerID":"${msgBean.peerAddress}","time":"$time",
 //                |"msg":"$msg"}""".trimMargin(),
-            val publicKey = EcKeyUtils.getPulicKeyFromAddressNew(msgBean.peerAddress)
-            val encMsg = EcKeyUtils.ECEncrypt(publicKey, msg.toByteArray())
+//            val publicKey = EcKeyUtils.getPulicKeyFromAddressNew(msgBean.peerAddress)
+//            val encMsg = EcKeyUtils.ECEncrypt(publicKey, msg.toByteArray())
+            val encMsg = EcKeyUtils.ECEncrypt(msgBean.peerAddress, msg.toByteArray())
             val sb = StringBuffer();
             sb.append(userBean.address);
             sb.append(msgBean.peerAddress);

@@ -129,51 +129,6 @@ interface IRefreshMsgCallback{
                 override fun onMyError(error: VolleyError?) {
                     LogUtil.e("IRefreshMsgCallback", "获取消息异常 e = $error")
                 }
-
-                val json = """{
-	"data": [{
-		"msg": "f111",
-		"peerID": "CFWCHAIN2yCGewFrJiWT5GVvqCG15HVV6dQMU9Mf6GZpiuJugdKBjR9NwMPS1otr9fXiZ1XUxeZgtWFTRfJyLRm5ncL6fgDgMXX6JmxhNNKv51S73hwqRxTy2NUA8CYkgXUJQqWRzWGJ6A",
-		"time": "1573978856",
-		"userID": "OSN2yCG1pAnXhDpNPRDTVkd6asV8bJLyHFeMRDnYHkhAwxMZumRgotu3hVR8Z1QxWzNNRSi4TLstmaH5cwTje1QufotxTLkoAaGaeh2tHUT3w7cRjPS6XTCE25drZbTKLrJvxHHnd"
-	}, {
-		"msg": "dwa",
-		"peerID": "CFWCHAIN2yCGewFrJiWT5GVvqCG15HVV6dQMU9Mf6GZpiuJugdKBjR9NwMPS1otr9fXiZ1XUxeZgtWFTRfJyLRm5ncL6fgDgMXX6JmxhNNKv51S73hwqRxTy2NUA8CYkgXUJQqWRzWGJ6A",
-		"time": "1573979968",
-		"userID": "OSN2yCG1pAnXhDpNPRDTVkd6asV8bJLyHFeMRDnYHkhAwxMZumRgotu3hVR8Z1QxWzNNRSi4TLstmaH5cwTje1QufotxTLkoAaGaeh2tHUT3w7cRjPS6XTCE25drZbTKLrJvxHHnd"
-	}, {
-		"msg": "12323df",
-		"peerID": "CFWCHAIN2yCGewFrJiWT5GVvqCG15HVV6dQMU9Mf6GZpiuJugdKBjR9NwMPS1otr9fXiZ1XUxeZgtWFTRfJyLRm5ncL6fgDgMXX6JmxhNNKv51S73hwqRxTy2NUA8CYkgXUJQqWRzWGJ6A",
-		"time": "1573980236",
-		"userID": "OSN2yCG1pAnXhDpNPRDTVkd6asV8bJLyHFeMRDnYHkhAwxMZumRgotu3hVR8Z1QxWzNNRSi4TLstmaH5cwTje1QufotxTLkoAaGaeh2tHUT3w7cRjPS6XTCE25drZbTKLrJvxHHnd"
-	}, {
-		"msg": "shibushi",
-		"peerID": "CFWCHAIN2yCGewFrJiWT5GVvqCG15HVV6dQMU9Mf6GZpiuJugdKBjR9NwMPS1otr9fXiZ1XUxeZgtWFTRfJyLRm5ncL6fgDgMXX6JmxhNNKv51S73hwqRxTy2NUA8CYkgXUJQqWRzWGJ6A",
-		"time": "1573980980",
-		"userID": "OSN2yCG1pAnXhDpNPRDTVkd6asV8bJLyHFeMRDnYHkhAwxMZumRgotu3hVR8Z1QxWzNNRSi4TLstmaH5cwTje1QufotxTLkoAaGaeh2tHUT3w7cRjPS6XTCE25drZbTKLrJvxHHnd"
-	}, {
-		"msg": "shujujieguo",
-		"peerID": "CFWCHAIN2yCGewFrJiWT5GVvqCG15HVV6dQMU9Mf6GZpiuJugdKBjR9NwMPS1otr9fXiZ1XUxeZgtWFTRfJyLRm5ncL6fgDgMXX6JmxhNNKv51S73hwqRxTy2NUA8CYkgXUJQqWRzWGJ6A",
-		"time": "1573981215",
-		"userID": "OSN2yCG1pAnXhDpNPRDTVkd6asV8bJLyHFeMRDnYHkhAwxMZumRgotu3hVR8Z1QxWzNNRSi4TLstmaH5cwTje1QufotxTLkoAaGaeh2tHUT3w7cRjPS6XTCE25drZbTKLrJvxHHnd"
-	}, {
-		"msg": "dfewsfd",
-		"peerID": "CFWCHAIN2yCGewFrJiWT5GVvqCG15HVV6dQMU9Mf6GZpiuJugdKBjR9NwMPS1otr9fXiZ1XUxeZgtWFTRfJyLRm5ncL6fgDgMXX6JmxhNNKv51S73hwqRxTy2NUA8CYkgXUJQqWRzWGJ6A",
-		"time": "1573981499",
-		"userID": "OSN2yCG1pAnXhDpNPRDTVkd6asV8bJLyHFeMRDnYHkhAwxMZumRgotu3hVR8Z1QxWzNNRSi4TLstmaH5cwTje1QufotxTLkoAaGaeh2tHUT3w7cRjPS6XTCE25drZbTKLrJvxHHnd"
-	}, {
-		"msg": "iele",
-		"peerID": "CFWCHAIN2yCGewFrJiWT5GVvqCG15HVV6dQMU9Mf6GZpiuJugdKBjR9NwMPS1otr9fXiZ1XUxeZgtWFTRfJyLRm5ncL6fgDgMXX6JmxhNNKv51S73hwqRxTy2NUA8CYkgXUJQqWRzWGJ6A",
-		"time": "1573982601",
-		"userID": "OSN2yCG1pAnXhDpNPRDTVkd6asV8bJLyHFeMRDnYHkhAwxMZumRgotu3hVR8Z1QxWzNNRSi4TLstmaH5cwTje1QufotxTLkoAaGaeh2tHUT3w7cRjPS6XTCE25drZbTKLrJvxHHnd"
-	}, {
-		"msg": "fd",
-		"peerID": "CFWCHAIN2yCGewFrJiWT5GVvqCG15HVV6dQMU9Mf6GZpiuJugdKBjR9NwMPS1otr9fXiZ1XUxeZgtWFTRfJyLRm5ncL6fgDgMXX6JmxhNNKv51S73hwqRxTy2NUA8CYkgXUJQqWRzWGJ6A",
-		"time": "1573987887",
-		"userID": "OSN2yCG1pAnXhDpNPRDTVkd6asV8bJLyHFeMRDnYHkhAwxMZumRgotu3hVR8Z1QxWzNNRSi4TLstmaH5cwTje1QufotxTLkoAaGaeh2tHUT3w7cRjPS6XTCE25drZbTKLrJvxHHnd"
-	}],
-	"errCode": "0"
-}"""
             },
             false)
     }

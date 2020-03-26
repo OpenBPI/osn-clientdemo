@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.OnClick
+import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.activity.SubBaseActivity
 import cn.leiyu.osn_clientdemo.activity.home.msg.SendActivity

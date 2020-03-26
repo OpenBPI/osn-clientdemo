@@ -120,15 +120,15 @@
             android:layout_marginTop="@dimen/dp_35"/>
     </LinearLayout>
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/test_import"
-        style="@style/wrap"
-        android:text="导入信息"
-        android:textColor="@color/bg_1484ED"
-        android:textSize="@dimen/sp_15"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="@dimen/dp_15"
-        android:layout_marginBottom="@dimen/dp_15"/>
+<!--    <TextView-->
+<!--        android:visibility="gone"-->
+<!--        android:id="@+id/test_import"-->
+<!--        style="@style/wrap"-->
+<!--        android:text="导入信息"-->
+<!--        android:textColor="@color/bg_1484ED"-->
+<!--        android:textSize="@dimen/sp_15"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        android:layout_marginLeft="@dimen/dp_15"-->
+<!--        android:layout_marginBottom="@dimen/dp_15"/>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

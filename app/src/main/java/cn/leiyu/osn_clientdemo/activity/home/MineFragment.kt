@@ -1,5 +1,6 @@
 package cn.leiyu.osn_clientdemo.activity.home
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
@@ -11,10 +12,12 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.OnClick
 import cn.leiyu.base.activity.BaseActivity
+import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.osn_clientdemo.Constant
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.activity.AbsParentBaseActivity
 import cn.leiyu.osn_clientdemo.activity.SubBaseFragment
+import cn.leiyu.osn_clientdemo.activity.home.contact.AddContactActivity
 import cn.leiyu.osn_clientdemo.activity.mine.ServiceAddressActivity
 import cn.leiyu.osn_clientdemo.beans.UserBean
 import cn.leiyu.osn_clientdemo.db.LocalDBManager
@@ -35,6 +38,8 @@ class MineFragment : SubBaseFragment() {
     lateinit var userName: TextView
     @BindView(R.id.opera)
     lateinit var url: TextView
+    @BindView(R.id.opera1)
+    lateinit var nouse: TextView
     @BindView(R.id.nickName)
     lateinit var nickName: TextView
     @BindView(R.id.sign)
@@ -53,6 +58,7 @@ class MineFragment : SubBaseFragment() {
         super.initView()
         userName.text = getString(R.string.mine_title)
         url.text = getString(R.string.setConnection)
+        nouse.visibility = View.INVISIBLE
         initData()
     }
 
@@ -99,7 +105,6 @@ class MineFragment : SubBaseFragment() {
             else -> super.onClick(v)
         }
     }
-
     override fun onAlertView(v: View, type: Int) {
         when(type){
             FLAG_NICK->{
