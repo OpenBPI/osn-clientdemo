@@ -13,25 +13,20 @@ import androidx.viewpager.widget.ViewPager
 import cn.leiyu.base.http.JsonVolleyUtil
 import cn.leiyu.base.http.VolleyListenerInterface
 import cn.leiyu.base.utils.LogUtil
+import cn.leiyu.base.utils.encoded.EcKeyUtils
 import cn.leiyu.base.weak.WeakHandlerCallback
 import cn.leiyu.osn_clientdemo.activity.AbsParentBaseActivity
 import cn.leiyu.osn_clientdemo.activity.home.HomeFragment
 import cn.leiyu.osn_clientdemo.activity.home.LoginLogFragment
 import cn.leiyu.osn_clientdemo.activity.home.MineFragment
-import cn.leiyu.osn_clientdemo.activity.mine.ServiceAddressActivity
 import cn.leiyu.osn_clientdemo.adapters.HomePageAdapter
-import cn.leiyu.osn_clientdemo.beans.MsgBean
-import com.android.volley.VolleyError
-import com.fasterxml.jackson.core.JsonParser
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import org.json.JSONObject
+import cn.leiyu.osn_clientdemo.beans.UserBean
 
 /**
  * 程序主页
  */
 class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
-    , IRefreshMsgCallback{
+    , IRefreshMsgCallback, IRequestCallback{
 
     /**
      * 发送标志
@@ -40,7 +35,8 @@ class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
     lateinit var viewPager: ViewPager
     lateinit var homeNav: RadioGroup
     private lateinit var heart: Handler
-    public val fileDir = null
+    var isLogin:Boolean = false
+    lateinit var userBead:UserBean
 
     override fun getLayoutId(): Int {
         return R.layout.activity_main
@@ -60,6 +56,7 @@ class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
             }
         }
         IMApp.refreshMsgCallback = this
+        userBead = getUser()
     }
 
     override fun initData() {
@@ -111,29 +108,16 @@ class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
     }
 
     internal fun sendHeart(){
-        JsonVolleyUtil.request(this, Constant.API.SERVICE_HOST, "login",
-            """{"command":"login", "user":"${getUser().address}"}""",
-            object: VolleyListenerInterface(this, mListener, mErrorListener){
-                override fun onMySuccess(result: String?) {
-                    IMProtocol.setServiceOSNID(result!!)
-                    send()
-                }
-
-                override fun onMyError(error: VolleyError?) {
-                    send()
-                    LogUtil.e(mContext?.toString()!!, "心跳反馈 ${error?.networkResponse.toString()}")
-                }
-
-                private fun send(){
-                    mContext.get()?.let {
-                        IMApp.refreshMsgCallback?.getMsg(it)
-                        heart.sendEmptyMessageDelayed(10, Constant.API.GET_MSG.toLong())
-                    }
-                }
-            }, false)
-//        heart.sendEmptyMessageDelayed(11, Constant.API.GET_MSG.toLong())
+        if(isLogin)
+            IMApp.getMessage(this, this, userBead)
+        else
+            IMApp.login(this, this, userBead)
     }
 
+    override fun reqResult(volley: VolleyListenerInterface) {
+        isLogin = volley.result
+        heart.sendEmptyMessageDelayed(10, Constant.API.GET_MSG.toLong())
+    }
     inner class HeartHandler(context: MainActivity): WeakHandlerCallback<MainActivity>(context){
         override fun handleMessage(msg: Message): Boolean {
             var result = false
@@ -143,7 +127,7 @@ class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
                     result = true
                 }
                 11->{
-                    IMApp.refreshMsgCallback?.getMsg(getWeakContext()!!)
+                    IMApp.getMessage(getWeakContext()!!, getWeakContext()!!, userBead)
                     result = true
                 }
             }

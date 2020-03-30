@@ -3,13 +3,14 @@ package cn.leiyu.osn_clientdemo.beans
 /**
  * 服务器-消息接口对象
  */
-data class MsgInterBean(val errCode: Int = -1,
+data class MsgInterBean(val errCode: String = "",
                         val data: MutableList<MsgInterItemBean>)
 
 /**
  * 服务器-消息对象
  */
-data class MsgInterItemBean(val content: String ="",
+data class MsgInterItemBean(val command: String ="",
+                            val content: String ="",
                             val from: String,
                             val to: String,
                             val crypto: String,

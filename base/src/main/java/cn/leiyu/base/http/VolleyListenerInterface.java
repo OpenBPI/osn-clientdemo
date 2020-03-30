@@ -7,6 +7,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONObject;
+
 import java.lang.ref.WeakReference;
 
 import cn.leiyu.base.App;
@@ -16,18 +18,23 @@ public abstract class VolleyListenerInterface {
     public WeakReference<Context> mContext;
     public static Response.Listener<String> mListener;
     public static Response.ErrorListener mErrorListener;
-    protected long localMsgId;
+    public long localMsgId;
+    public boolean result;
+    public String request;
+    public JSONObject json = null;
 
-    public VolleyListenerInterface(Context context, Response.Listener<String> listener,
+    public VolleyListenerInterface(String request, Context context, Response.Listener<String> listener,
                                    Response.ErrorListener errorListener) {
         this.mContext = new WeakReference<>(context);
         this.mErrorListener = errorListener;
         this.mListener = listener;
+        this.request = request;
+        this.result = false;
     }
 
-    public VolleyListenerInterface(Context context, long localMsgId, Response.Listener<String> listener,
+    public VolleyListenerInterface(String request, Context context, long localMsgId, Response.Listener<String> listener,
                                    Response.ErrorListener errorListener){
-        this(context, listener, errorListener);
+        this(request, context, listener, errorListener);
         this.localMsgId = localMsgId;
     }
 
@@ -43,7 +50,21 @@ public abstract class VolleyListenerInterface {
             @Override
             public void onResponse(String s) {
                 Log.e("response", s);
-                onMySuccess(s);
+                VolleyError error = null;
+                try {
+                    json = new JSONObject(s);
+                    if(json.has("errCode") && json.getString("errCode").equalsIgnoreCase("success")) {
+                        result = true;
+                        onMySuccess(s);
+                        return;
+                    }
+                    error = new VolleyError("errCode:"+json.getString("errCode"), new Throwable(json.getString("errCode")));
+                }
+                catch (Exception e){
+                    result = false;
+                    error = new VolleyError(e.toString());
+                }
+                onMyError(error);
             }
         };
         return mListener;
@@ -54,6 +75,7 @@ public abstract class VolleyListenerInterface {
         mErrorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                result = false;
                 onMyError(volleyError);
                 Context tmp = mContext.get();
                 LogUtil.e((tmp == null ? "VolleyListenerInterface" : tmp.getClass().toString()), "访问错误 "+volleyError.getMessage());

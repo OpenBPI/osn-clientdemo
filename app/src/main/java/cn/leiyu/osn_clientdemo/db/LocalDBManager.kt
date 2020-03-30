@@ -24,6 +24,9 @@ class LocalDBManager constructor(context: Context)
                 "sendSuccess varchar(1));"
         db?.execSQL(sql)
         db?.execSQL("create unique index user_unique_address on user(address, loginId)")
+        sql = "create table if not exists groups(_id Integer PRIMARY KEY autoincrement,"+
+                "osnid text, owner text, privateKey text, publicShadow text, privateShadow text, userList text);"
+        db?.execSQL(sql)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

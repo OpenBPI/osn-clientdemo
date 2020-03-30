@@ -27,6 +27,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.home.contact.AddContactActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.group.AddMemberActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.home.contact.DetailActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.home.contact.UpdateActivity"

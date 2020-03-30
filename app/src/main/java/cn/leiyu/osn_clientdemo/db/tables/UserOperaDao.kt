@@ -102,4 +102,30 @@ class UserOperaDao constructor(db: SQLiteDatabase) : AbsTableOpera(db) {
         }
         return data
     }
+
+    fun queryAll(login: LoginBean): MutableList<UserBean>{
+        val data = arrayListOf<UserBean>()
+        val sql = "select * from "+mTableName+" where loginId = ? "
+        var c: Cursor? = null
+        try{
+            c = mSqliteDB.rawQuery(sql, arrayOf("${login.loginId}"))
+            c?.let {
+                while(c.moveToNext()){
+                    val bean = UserBean(loginId = -1, loginName = "", _id = c.getLong(c.getColumnIndex("_id")),
+                        nickName = c.getString(c.getColumnIndex("nickName")),
+                        sign = c.getString(c.getColumnIndex("sign")),
+                        remark = c.getString(c.getColumnIndex("remark")),
+                        address = c.getString(c.getColumnIndex("address")),
+                        lableColor = c.getInt(c.getColumnIndex("lableColor")))
+                    if(bean.address == login.address && bean.nickName == "")bean.nickName = login.loginName
+                    data.add(bean)
+                }
+            }
+        }catch (e: SQLException){
+            e.printStackTrace()
+        }finally {
+            c?.close()
+        }
+        return data
+    }
 }

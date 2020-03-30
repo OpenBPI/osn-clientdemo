@@ -42,7 +42,6 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
     @BindView(R.id.refresh_view)
     lateinit var refreshView: PtrClassicFrameLayout
     private lateinit var refreshUtil: BaseRefreshUtil<HomeFragment>
-    //private lateinit var user: UserBean
     private lateinit var userOperaDao: UserOperaDao
     private var adapter: ContactAdapter? = null
     private var page: Int = 1
@@ -71,7 +70,7 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
             user = (mContext as AbsParentBaseActivity).getUser()
         }
         val addressUtil = AddressUtil(activity?.filesDir.toString())
-        gPrivateKey = addressUtil.getPrivateKey("", user.address)
+        gPrivateKey = addressUtil.getPrivateKey(user.address)
         userOperaDao = LocalDBManager(mContext!!).getTableOperation(UserOperaDao::class.java)
         readUser()
 
@@ -104,9 +103,7 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
                 )
             }
             R.id.opera1->{
-                val intent = Intent(mContext!!, AddContactActivity::class.java)
-                intent.putExtra("data", "group")
-                startActivityForResult(intent,103)
+                startActivityForResult(Intent(mContext!!, AddContactActivity::class.java).putExtra("data", "group"),103)
             }
             else-> super.onClick(v)
         }
@@ -139,7 +136,7 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
     private fun readUser(){
         val users = userOperaDao.query(user, page)
         if(adapter == null || page == 1){
-            adapter = ContactAdapter(mContext!!, users)
+            adapter = ContactAdapter(mContext!!, users, false)
             listView.adapter = adapter
         }else adapter?.addData(users, page == 1)
     }

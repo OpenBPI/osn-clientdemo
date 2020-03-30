@@ -410,11 +410,11 @@ public class EcKeyUtils {
 
         byte[] address = new byte[2+65+32];
         address[0] = (byte)0x10;
-        if(accType.equalsIgnoreCase("group"))
-            address[0] |= 0x80;
-        else if(accType.equalsIgnoreCase("service"))
-            address[0] |= 0x40;
         address[1] = 0;
+        if(accType.equalsIgnoreCase("group"))
+            address[1] = 1;
+        else if(accType.equalsIgnoreCase("service"))
+            address[1] = 2;
         System.arraycopy(pub1, 0, address, 2,65);
         System.arraycopy(pub2hash, 0, address, 67,32);
         return EcUtils.generateAddress(address);
@@ -460,6 +460,65 @@ public class EcKeyUtils {
         return Base64.encodeToString(signdata, Base64.URL_SAFE|Base64.NO_WRAP);
     }
 
+    public static String hashOsnData(byte[] data){
+        byte[] hash = sha256(data);
+        return Base58.encode(hash);
+    }
+    public static String signOsnData(String privKey, byte[] data){
+        try {
+            ECPrivateKey prvatekey = EcKeyUtils.getEcPrivateKeyFromHex(privKey);
+            byte[] hash = sha256(data);
+            byte[] signdata = EcSignUtil.signData(hash, prvatekey);
+            return Base58.encode(signdata);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static String signOsnHash(String privKey, String hash){
+        try {
+            ECPrivateKey privatekey = EcKeyUtils.getEcPrivateKeyFromHex(privKey);
+            byte[] hashData = Base58.decode(hash);
+            byte[] signdata = EcSignUtil.signData(hashData, privatekey);
+            return Base58.encode(signdata);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static boolean verifyOsnData(String osnID, byte[] data, String sign){
+        try {
+            byte[] hashData = sha256(data);
+            byte[] signData = Base58.decode(sign);
+            ECPublicKey pkey = getPulicKeyFromAddress(osnID);
+            Signature ecdsaVerify = Signature.getInstance(SIGN_ALGORITHM, new BouncyCastleProvider());
+            ecdsaVerify.initVerify(pkey);
+            ecdsaVerify.update(hashData);
+            return ecdsaVerify.verify(signData);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public static boolean verifyOsnHash(String osnID, String hash, String sign){
+        try {
+            byte[] hashData = Base58.decode(hash);
+            byte[] signData = Base58.decode(sign);
+            ECPublicKey pkey = getPulicKeyFromAddress(osnID);
+            Signature ecdsaVerify = Signature.getInstance(SIGN_ALGORITHM, new BouncyCastleProvider());
+            ecdsaVerify.initVerify(pkey);
+            ecdsaVerify.update(hashData);
+            return ecdsaVerify.verify(signData);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * 签名
      * @param privkey
@@ -486,11 +545,10 @@ public class EcKeyUtils {
         byte[] decodeBuffer = base64Decoder.decodeBuffer(sign);
         return EcSignUtil.verifySign(data, address, decodeBuffer);
     }
-
     public static boolean verifySign(byte[] data, String addr, byte[] sig) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
         //Signature ecdsaVerify = Signature.getInstance(SIGN_ALGORITHM, new BouncyCastleProvider());
         Signature ecdsaVerify = Signature.getInstance(SIGN_ALGORITHM);
-        ECPublicKey pkey = getPulicKeyFromAddressNew(addr);
+        ECPublicKey pkey = getPulicKeyFromAddress(addr);
         ecdsaVerify.initVerify(pkey);
         ecdsaVerify.update(data);
         return ecdsaVerify.verify(sig);
@@ -498,8 +556,7 @@ public class EcKeyUtils {
     /**
      * 生成私钥
      */
-    public static ECPrivateKey generateEcPrivateKey()
-    {
+    public static ECPrivateKey generateEcPrivateKey(){
         try {
             Provider provider = new BouncyCastleProvider();
             KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM,provider);
@@ -511,13 +568,7 @@ public class EcKeyUtils {
         }
         return null;
     }
-    /**
-     * 从16进制的字符中获取私钥
-     * @param hexStr
-     * @return
-     */
-    public static ECPrivateKey getEcPrivateKeyFromHex(String hexStr)
-    {
+    public static ECPrivateKey getEcPrivateKeyFromHex(String hexStr){
         try {
             //BASE64Decoder dec = new BASE64Decoder();
             //byte[] hexdata = dec.decodeBuffer(hexStr);
@@ -581,7 +632,7 @@ public class EcKeyUtils {
         }
         return null;
     }
-    public static ECPublicKey getPulicKeyFromAddressNew(String address) {//
+    public static ECPublicKey getPulicKeyFromAddress(String address) {//
         String flag = address.substring(0, 3);
         if (!flag.equals("OSN")) {
             System.out.println("error osn id");
@@ -611,40 +662,6 @@ public class EcKeyUtils {
         }
         return null;
     }
-    public static ECPublicKey getPulicKeyFromAddress(String address){
-        //
-        String flag = address.substring(0, 8);
-        if (!flag.equals("CFWCHAIN"))
-            return null;
-        // decode base58
-        String base58str = address.substring(8);
-        Base58 base58  =new Base58();
-        try {
-            byte[] data = base58.decode(base58str);
-            byte[] pub = null;
-            if (data[0]==0x11)
-            {
-                if (data[1]==4 && data.length >= 66)
-                {
-                    pub = new byte[65];
-                    System.arraycopy(data,1, pub,0, 65);
-                }
-            } else if (data[0]==4 && data.length >= 65){
-                pub = new byte[65];
-                System.arraycopy(data,0, pub,0, 65);
-            }
-
-            if (pub != null)
-            {
-                // 转化成公钥
-                return getPublicKeyFromHex(pub);
-            }
-        } catch (Exception e)
-        {
-            return null;
-        }
-        return null;
-    }
 
     /**
      * 字节数组转16进制
@@ -663,7 +680,7 @@ public class EcKeyUtils {
         return sb.toString();
     }
     public static String ECEncrypt(String osnID, byte[] data){
-        ECPublicKey pubKey = EcKeyUtils.getPulicKeyFromAddressNew(osnID);
+        ECPublicKey pubKey = EcKeyUtils.getPulicKeyFromAddress(osnID);
         return ECEncrypt(pubKey, data);
     }
     public static String ECEncrypt(ECPublicKey publicKey, byte[] data){
@@ -697,12 +714,17 @@ public class EcKeyUtils {
         }
         return null;
     }
+    public static String ECDecrypt(String privateKey, String data){
+        ECPrivateKey privKey = getEcPrivateKeyFromHex(privateKey);
+        return ECDecrypt(privKey, data);
+    }
     public static String ECDecrypt(ECPrivateKey privateKey, String data){
         try {
             byte[] rawData = Base58.decode(data);
-            short keyLength = (short)((rawData[0]&0xff)|((rawData[1]&0xff)>>8));
+            short keyLength = (short)((rawData[0]&0xff)|((rawData[1]&0xff)<<8));
             byte[] ecData = new byte[keyLength];
             System.arraycopy(rawData,2,ecData,0,keyLength);
+            LogUtil.e("crypt", bytesToHex(ecData));
             ecData = ECIESDecrypt(privateKey, ecData);
 
             byte[] aesKey = new byte[16];
@@ -725,11 +747,10 @@ public class EcKeyUtils {
     }
     public static byte[] ECIESEncrypt(ECPublicKey pubkey, byte[] raw){
         try {
-            //Cipher cipher = Cipher.getInstance("ECIESwithAES/NONE/PKCS7Padding", "BC");
             //Cipher cipher = Cipher.getInstance("ECIESwithAES/NONE/PKCS7Padding",new BouncyCastleProvider());
             Cipher cipher = Cipher.getInstance("ECIES",new BouncyCastleProvider());
+            //Cipher cipher = Cipher.getInstance("ECIESwithAESCBC",new BouncyCastleProvider());
             cipher.init(Cipher.ENCRYPT_MODE, pubkey);
-            //cipher.init(Cipher.ENCRYPT_MODE, pubkey);
             byte[] cipherText = cipher.doFinal(raw);
             return cipherText;
         } catch (Exception e){
@@ -737,17 +758,15 @@ public class EcKeyUtils {
         }
 
     }
-
     public static byte[] ECIESDecrypt(ECPrivateKey privateKey, byte[] raw){
         try {
-            Cipher cipher = Cipher.getInstance(
-                    "ECIESwithAES/NONE/PKCS7Padding",
-                    new BouncyCastleProvider());
+            //Cipher cipher = Cipher.getInstance("ECIESwithAES/NONE/PKCS7Padding",new BouncyCastleProvider());
+            Cipher cipher = Cipher.getInstance("ECIES",new BouncyCastleProvider());
+            //Cipher cipher = Cipher.getInstance("ECIESwithAESCBC",new BouncyCastleProvider());
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             byte[] cipherText = cipher.doFinal(raw);
             return cipherText;
-        } catch (Exception e)
-        {
+        } catch (Exception e){
             return null;
         }
     }

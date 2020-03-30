@@ -45,9 +45,13 @@
             android:id="@+id/item_edit"
             style="@style/wrap"
             android:text="@string/update_hint"
-            android:textColor="@color/bg_1484ED"
-            android:layout_marginRight="@dimen/dp_25"
-            android:layout_marginEnd="@dimen/dp_25"/>
+            android:textColor="@color/bg_1484ED"/>
+        <CheckBox
+            android:id="@+id/item_sel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:focusable="false"/>
     </LinearLayout>
 
     <View style="@style/create_line"

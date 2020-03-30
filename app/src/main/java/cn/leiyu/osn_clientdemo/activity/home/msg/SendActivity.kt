@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
+import android.widget.HorizontalScrollView
 import android.widget.ListView
 import butterknife.BindView
 import butterknife.OnClick
@@ -14,11 +15,9 @@ import cn.leiyu.base.http.JsonVolleyUtil
 import cn.leiyu.base.http.VolleyListenerInterface
 import cn.leiyu.base.utils.BaseRefreshUtil
 import cn.leiyu.base.utils.encoded.EcKeyUtils
-import cn.leiyu.osn_clientdemo.Constant
-import cn.leiyu.osn_clientdemo.IMApp
-import cn.leiyu.osn_clientdemo.IRefreshMsgCallback
-import cn.leiyu.osn_clientdemo.R
+import cn.leiyu.osn_clientdemo.*
 import cn.leiyu.osn_clientdemo.activity.SubBaseActivity
+import cn.leiyu.osn_clientdemo.activity.home.HomeFragment
 import cn.leiyu.osn_clientdemo.adapters.SendMsgAdapter
 import cn.leiyu.osn_clientdemo.beans.MsgBean
 import cn.leiyu.osn_clientdemo.beans.UserBean
@@ -34,7 +33,7 @@ import cn.leiyu.osn_clientdemo.utils.Base58
  * 消息-发送
  */
 class SendActivity: SubBaseActivity(), BaseRefreshUtil.IRefreshCallback<SendActivity>
-    , IRefreshMsgCallback {
+    , IRefreshMsgCallback, IRequestCallback {
 
     @BindView(android.R.id.list)
     lateinit var listView: ListView
@@ -155,51 +154,21 @@ class SendActivity: SubBaseActivity(), BaseRefreshUtil.IRefreshCallback<SendActi
         cv.put("sendSuccess", -1)
         val id = msgOperaDao.insert(null, cv, SQLiteDatabase.CONFLICT_ABORT)
         if(id > 0){
-//            JsonVolleyUtil.request(this, Constant.API.SERVICE_HOST, "sendMsg",
-//                """{"msgType":"sendmsg", "userID":"${userBean.address}",
-//                |"peerID":"${msgBean.peerAddress}","time":"$time",
-//                |"msg":"$msg"}""".trimMargin(),
-//            val publicKey = EcKeyUtils.getPulicKeyFromAddressNew(msgBean.peerAddress)
-//            val encMsg = EcKeyUtils.ECEncrypt(publicKey, msg.toByteArray())
-            val encMsg = EcKeyUtils.ECEncrypt(msgBean.peerAddress, msg.toByteArray())
-            val sb = StringBuffer();
-            sb.append(userBean.address);
-            sb.append(msgBean.peerAddress);
-            sb.append(encMsg);
-            sb.append(time.toString());
-            val digest = MessageDigest.getInstance("SHA-256")
-            val result = digest.digest(sb.toString().toByteArray());
-            val hash = Base58.encode(result)
-
-            JsonVolleyUtil.request(this, Constant.API.SERVICE_HOST, "sendMsg",
-                """{"command":"message", "from":"${userBean.address}",
-                |"to":"${msgBean.peerAddress}","timestamp":"$time","crypto":"no","description":"test",
-                |"content":"$encMsg","hash":"${hash}"}""".trimMargin(),
-                object: VolleyListenerInterface(this, id, mListener, mErrorListener){
-                    override fun onMySuccess(result: String?) {
-                        result?.let {
-                            val json = JSONObject(it)
-                            if(json.optInt("errCode", -1) == 0){
-                                //成功 修改发送状态
-                                val tmp = mContext.get() as? SendActivity
-                                tmp?.msgOperaDao?.update(localMsgId)
-                            }
-                        }
-                    }
-
-                    override fun onMyError(error: VolleyError?) {
-                        (mContext.get() as? SendActivity)?.let{
-                            it.msgOperaDao.update(localMsgId, 0)
-                            it.refreshList()
-                        }
-                    }
-                }, false)
+            IMApp.sendMessage(this, this, id, userBean, msgBean, time.toString(), msg)
             findViewById<View>(R.id.sendMsg).isEnabled = true
             mETMsg.setText("")
             refreshList()
         }
     }
-
+    override fun reqResult(volley:VolleyListenerInterface){
+        if(volley.result){
+            msgOperaDao.update(volley!!.localMsgId)
+        }
+        else{
+            msgOperaDao.update(volley!!.localMsgId, 0)
+            refreshList()
+        }
+    }
     private fun refreshList(){
         page = 1
         onPullDownRefresh()

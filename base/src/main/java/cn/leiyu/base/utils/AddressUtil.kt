@@ -29,7 +29,6 @@ const val KEY_END_WITH = ".prik"
  * 助记词后缀
  */
 const val WORD_END_WITH = ".mcw"
-const val KEY_FILE_NAME = "mainKey"
 
 class AddressUtil constructor(private val filesDir: String) {
 
@@ -39,10 +38,7 @@ class AddressUtil constructor(private val filesDir: String) {
         fun isGroup(osnid: String): Boolean{
             val osn = osnid.substring(3)
             val data = Base58.decode(osn)
-            val flag = (data[0].toInt() and 0x80)
-            if(flag == 0)
-                return false
-            return true
+            return data[1].toInt() == 1
         }
     }
     /**
@@ -50,17 +46,14 @@ class AddressUtil constructor(private val filesDir: String) {
      */
     fun createWord(): String = EcKeyUtils.createMnemonic()
 
-    fun getPrivateKey(pwd: String, address: String): String{
-        return EcKeyUtils.getPrivateKey(pwd, "${this.filesDir}$EC_DIR", "$address$KEY_END_WITH")
+    fun getPrivateKey(address: String): String{
+        return EcKeyUtils.getPrivateKey(null, "${this.filesDir}$EC_DIR", "$address$KEY_END_WITH")
     }
     fun genIdentify(mnemonicStr: String, pwd: String): String?{
         val params = createPub(mnemonicStr)
         address[0] = params[3]
         // 保存私钥 address.prik
         if (!EcKeyUtils.savePrivateKey(params[1], null,  "${this.filesDir}$EC_DIR", "${params[3]}$KEY_END_WITH")) {
-            return null
-        }
-        if (!EcKeyUtils.savePrivateKey(params[1], null,  "${this.filesDir}$EC_DIR", "${KEY_FILE_NAME}$KEY_END_WITH")) {
             return null
         }
         if (!EcKeyUtils.savePrivateKey(params[2], pwd, "${this.filesDir}$SHADOW_DIR", "${params[3]}$KEY_END_WITH")) {

@@ -1,23 +1,27 @@
 package cn.leiyu.osn_clientdemo.activity.home.contact
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.database.SQLException
-import android.os.Handler
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import butterknife.BindView
 import butterknife.OnClick
+import cn.leiyu.base.http.VolleyListenerInterface
 import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.base.utils.LogUtil
-import cn.leiyu.osn_clientdemo.IMProtocol
+import cn.leiyu.osn_clientdemo.IMApp
+import cn.leiyu.osn_clientdemo.IRequestCallback
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.activity.SubBaseActivity
 import cn.leiyu.osn_clientdemo.activity.home.HomeFragment
+import cn.leiyu.osn_clientdemo.beans.GroupBean
 import cn.leiyu.osn_clientdemo.beans.UserBean
 import cn.leiyu.osn_clientdemo.db.LocalDBManager
+import cn.leiyu.osn_clientdemo.db.tables.GroupOperaDao
 import cn.leiyu.osn_clientdemo.db.tables.UserOperaDao
 import cn.leiyu.osn_clientdemo.utils.ProductLableUtil
 import com.google.zxing.CaptureActivity
@@ -25,7 +29,7 @@ import com.google.zxing.CaptureActivity
 /**
  * 添加联系人
  */
-open class AddContactActivity: SubBaseActivity() {
+open class AddContactActivity: SubBaseActivity(), IRequestCallback {
 
     @BindView(R.id.friendId)
     lateinit var friendId: EditText
@@ -39,6 +43,7 @@ open class AddContactActivity: SubBaseActivity() {
     protected var isSuccess = false
     private val addType: String ? by lazy { intent.getStringExtra("data") }
     private var id: Array<String>? = null
+    lateinit var addBean:UserBean
 
     override fun getLayoutId(): Int {
         return R.layout.activity_addcontact
@@ -103,28 +108,36 @@ open class AddContactActivity: SubBaseActivity() {
     }
 
     protected open fun checkGroup(v: View){
-        if(IMProtocol.serviceID == ""){
+        if(IMApp.serviceID == ""){
             showToast("服务号为空")
             setResult(Activity.RESULT_OK)
             finish()
             return
         }
         val login = getUser()
-        val bean = UserBean(loginId = login.loginId, loginName = "",
+        addBean = UserBean(loginId = login.loginId, loginName = "",
             address = HomeFragment.user.address, nickName = friendNick.text.toString().trim(), remark = remark.text.toString().trim(),
             lableColor = ProductLableUtil.getLableColor())
-        var handler : Handler = Handler{
-            if(it.obj.equals("true")){
-                LocalDBManager(this).getTableOperation(UserOperaDao::class.java).insertUser(bean)
-                showToast("添加成功")
+        IMApp.addGroup(this, this, addBean, id!!)
+    }
+
+    override fun reqResult(volley: VolleyListenerInterface) {
+        if(volley.result){
+            try {
+                addBean.address = id!![0]
+                LocalDBManager(this).getTableOperation(UserOperaDao::class.java).insertUser(addBean)
+                val bean = GroupBean(id!![0], HomeFragment.user.address, id!![1], id!![2], id!![3], HomeFragment.user.address+";")
+                LocalDBManager(this).getTableOperation(GroupOperaDao::class.java).insertGroup(bean)
             }
-            else
-                showToast("添加失败")
-            setResult(Activity.RESULT_OK)
-            finish()
-            false
+            catch (e: Exception){
+                e.printStackTrace()
+            }
+            showToast("添加成功")
         }
-        IMProtocol.addGroup(this, handler, bean, id!!)
+        else
+            showToast("添加失败")
+        setResult(Activity.RESULT_OK)
+        finish()
     }
     protected open fun checkFriend(v: View){
         //ID必传

@@ -23,8 +23,9 @@ import cn.leiyu.osn_clientdemo.beans.UserBean
 /**
  * 联系人适配器
  */
-class ContactAdapter(context: Context, data: MutableList<UserBean>)
+class ContactAdapter(context: Context, data: MutableList<UserBean>, private val isSel: Boolean)
     : ImplBaseAdapter<UserBean>(context, data), View.OnClickListener {
+    var selItem: BooleanArray = BooleanArray(data.size) {false}
     override fun getLayoutId(position: Int): Int {
         return R.layout.list_item_contact
     }
@@ -41,6 +42,7 @@ class ContactAdapter(context: Context, data: MutableList<UserBean>)
     override fun <B : BaseViewHolder> initView(position: Int, holder: B) {
         with(holder as ViewHolder){
             edit.setOnClickListener(this@ContactAdapter)
+            select.setOnClickListener(this@ContactAdapter)
         }
     }
 
@@ -58,13 +60,21 @@ class ContactAdapter(context: Context, data: MutableList<UserBean>)
             address.text = bean.address
             edit.text = String.format(edit.text.toString(), "")
             edit.contentDescription = "$position"
+            select.contentDescription = "$position"
+            if(!isSel)
+                select.visibility = View.INVISIBLE
         }
     }
 
     override fun onClick(v: View?) {
         val pos = v?.contentDescription.toString().toInt()
-        (context as BaseActivity).startActivityForResult(Intent(context, UpdateActivity::class.java)
-            .putExtra("bean", data[pos]), 102)
+        if(v?.id == R.id.item_edit){
+            (context as BaseActivity).startActivityForResult(Intent(context, UpdateActivity::class.java)
+                .putExtra("bean", data[pos]), 102)
+        }
+        else if(v?.id == R.id.item_sel){
+            selItem[pos] = !selItem[pos]
+        }
     }
 
     class ViewHolder(view: View, resId: Int): BaseViewHolder(view, resId){
@@ -80,5 +90,7 @@ class ContactAdapter(context: Context, data: MutableList<UserBean>)
         lateinit var address: TextView
         @BindView(R.id.item_edit)
         lateinit var edit: TextView
+        @BindView(R.id.item_sel)
+        lateinit var select: TextView
     }
 }

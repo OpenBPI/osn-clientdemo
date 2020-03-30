@@ -6,7 +6,7 @@ import android.os.Parcelable
 /**
  * 联系人实体对象
  */
-class UserBean: LoginBean{
+open class UserBean: LoginBean{
 
     /**
      * 联系人ID
