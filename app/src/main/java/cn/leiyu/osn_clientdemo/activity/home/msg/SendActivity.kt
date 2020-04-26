@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
+import android.provider.Telephony
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
@@ -13,6 +14,7 @@ import butterknife.BindView
 import butterknife.OnClick
 import cn.leiyu.base.http.JsonVolleyUtil
 import cn.leiyu.base.http.VolleyListenerInterface
+import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.base.utils.BaseRefreshUtil
 import cn.leiyu.base.utils.encoded.EcKeyUtils
 import cn.leiyu.osn_clientdemo.*
@@ -23,6 +25,7 @@ import cn.leiyu.osn_clientdemo.beans.MsgBean
 import cn.leiyu.osn_clientdemo.beans.UserBean
 import cn.leiyu.osn_clientdemo.db.LocalDBManager
 import cn.leiyu.osn_clientdemo.db.tables.MsgOperaDao
+import cn.leiyu.osn_clientdemo.db.tables.UserOperaDao
 import com.android.volley.VolleyError
 import com.chanven.lib.cptr.PtrClassicFrameLayout
 import org.json.JSONObject
@@ -33,7 +36,7 @@ import cn.leiyu.osn_clientdemo.utils.Base58
  * 消息-发送
  */
 class SendActivity: SubBaseActivity(), BaseRefreshUtil.IRefreshCallback<SendActivity>
-    , IRefreshMsgCallback, IRequestCallback {
+    , IRefreshMsgCallback {
 
     @BindView(android.R.id.list)
     lateinit var listView: ListView
@@ -74,7 +77,8 @@ class SendActivity: SubBaseActivity(), BaseRefreshUtil.IRefreshCallback<SendActi
 //        sharedEdit = shared.edit()
 //        if(mETMsg.text.toString() != "")
 //            sharedEdit.putString("${Constant.SUBFIX_DRAFT}${msgBean.peerId}", "").apply()
-        msgAdapter = SendMsgAdapter(this, arrayListOf(), msgBean)
+        val userList = LocalDBManager(this).getTableOperation(UserOperaDao::class.java).queryAll(userBean)
+        msgAdapter = SendMsgAdapter(this, arrayListOf(), userList, msgBean)
         listView.adapter = msgAdapter
         onPullDownRefresh()
     }
@@ -122,7 +126,11 @@ class SendActivity: SubBaseActivity(), BaseRefreshUtil.IRefreshCallback<SendActi
     }
 
     override fun onPullDownRefresh() {
-        val data = msgOperaDao.query(msgBean.peerId, userBean, page)
+        val data =
+            if (AddressUtil.isGroup(msgBean.peerAddress))
+                msgOperaDao.query(msgBean.peerId, userBean, true, page)
+            else
+                msgOperaDao.query(msgBean.peerId, userBean, false, page)
         msgAdapter.addData(data, isReset = (page != 1))
         refreshView.refreshComplete()
 
@@ -154,22 +162,28 @@ class SendActivity: SubBaseActivity(), BaseRefreshUtil.IRefreshCallback<SendActi
         cv.put("sendSuccess", -1)
         val id = msgOperaDao.insert(null, cv, SQLiteDatabase.CONFLICT_ABORT)
         if(id > 0){
-            IMApp.sendMessage(this, this, id, userBean, msgBean, time.toString(), msg)
+            //IMApp.sendMessage(this, thiids, id, userBean, msgBean, time.toString(), msg)
+            IMApp.sendMessage(msgBean, time.toString(), msg)
+            //msgOperaDao.update(id)
             findViewById<View>(R.id.sendMsg).isEnabled = true
             mETMsg.setText("")
             refreshList()
         }
     }
-    override fun reqResult(volley:VolleyListenerInterface){
-        if(volley.result){
-            msgOperaDao.update(volley!!.localMsgId)
-        }
-        else{
-            msgOperaDao.update(volley!!.localMsgId, 0)
-            refreshList()
-        }
-    }
+//    override fun reqResult(volley:VolleyListenerInterface){
+//        if(volley.result){
+//            msgOperaDao.update(volley!!.localMsgId)
+//        }
+//        else{
+//            msgOperaDao.update(volley!!.localMsgId, 0)
+//            refreshList()
+//        }
+//    }
     private fun refreshList(){
+        page = 1
+        onPullDownRefresh()
+    }
+    override fun updateView(){
         page = 1
         onPullDownRefresh()
     }

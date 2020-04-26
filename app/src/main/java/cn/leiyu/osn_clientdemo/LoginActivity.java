@@ -178,7 +178,7 @@ public class LoginActivity extends BaseActivity {
                     //写库
                     Integer[] colors = new Integer[]{getResources().getColor(R.color.bg_1484ED)};
                     UserBean bean = new UserBean(-1,"test"+i, -1,"test"+i,
-                            f.getName().substring(0, f.getName().length() - 5), "",
+                            f.getName().substring(0, f.getName().length() - 5), "",0,
                             "", ProductLableUtil.getLableColor(colors));
                     long id = dbManager.getTableOperation(LoginOperaDao.class).insert(bean);
                     if(id > 0){

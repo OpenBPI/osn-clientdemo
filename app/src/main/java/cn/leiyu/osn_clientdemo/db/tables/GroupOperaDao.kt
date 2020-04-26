@@ -17,6 +17,7 @@ class GroupOperaDao constructor(db: SQLiteDatabase) : AbsTableOpera(db) {
     fun insertGroup(group: GroupBean){
         val values = ContentValues()
         values.put("osnid", group.osnid)
+        values.put("name", group.name)
         values.put("owner", group.owner)
         values.put("privateKey", group.privateKey)
         values.put("publicShadow", group.publicShadow)
@@ -47,6 +48,7 @@ class GroupOperaDao constructor(db: SQLiteDatabase) : AbsTableOpera(db) {
             while (c.moveToNext()){
                 c.getColumnIndex("")
                 bean = GroupBean(c.getString(c.getColumnIndex("osnid")),
+                    c.getString(c.getColumnIndex("name")),
                     c.getString(c.getColumnIndex("owner")),
                     c.getString(c.getColumnIndex("privateKey")),
                     c.getString(c.getColumnIndex("publicShadow")),

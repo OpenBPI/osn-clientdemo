@@ -9,6 +9,7 @@ import androidx.core.text.HtmlCompat
 import butterknife.BindView
 import butterknife.ButterKnife
 import cn.leiyu.base.adapter.ImplBaseAdapter
+import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.osn_clientdemo.Constant
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.beans.MsgBean
@@ -43,11 +44,13 @@ class MsgAdapter(context: Context, data: MutableList<MsgBean>)
     override fun <B : BaseViewHolder> showView(position: Int, holder: B) {
         val bean = data[position]
         with(holder as ViewHolder){
-            val name = bean.peerName
+            var name = bean.peerName
             head.text = name.substring(name.length - 1, name.length)
             val shape = context.resources.getDrawable(R.drawable.bg_circle) as GradientDrawable
             shape.setColor(bean.peerLableColor)
             head.setBackgroundDrawable(shape)
+            if(AddressUtil.isGroup(bean.peerAddress))
+                name = "G: " + name
             nick.text = name
             time.text = ProductLableUtil.showTime(bean.time.toLong() * 1000, Date())
             val tmpMsg = shared.getString("${Constant.SUBFIX_DRAFT}${bean.peerId}", "")

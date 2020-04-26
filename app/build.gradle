@@ -38,12 +38,16 @@ android {
         }
     }
 
-    android.applicationVariants.all {
-        it.outputs.all {out->
-            out.outputFileName "${getRootDir().name}_${productFlavors[0].name}_${versionName}_${it.buildType.name}.apk"
-        }
+//    android.applicationVariants.all {
+//        it.outputs.all {out->
+//            out.outputFileName "${getRootDir().name}_${productFlavors[1].name}_${versionName}_${it.buildType.name}.apk"
+//        }
+//    }
+    packagingOptions {
+        exclude 'lib/x86_64/darwin/libscrypt.dylib'
+        exclude 'lib/x86_64/freebsd/libscrypt.so'
+        exclude 'lib/x86_64/linux/libscrypt.so'
     }
-
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -54,25 +58,29 @@ android {
             dimension = 'product'
             manifestPlaceholders = ["appName": "陌陌Demo","appIcon":"@mipmap/ic_momo"]
             applicationIdSuffix = '.momo'
-            resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
+            //resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
+            resValue("string", "initUrl", "106.13.37.230:8100")
         }
         dingding{
             dimension = 'product'
             manifestPlaceholders = ["appName": "钉钉Demo","appIcon":"@mipmap/ic_dingding"]
             applicationIdSuffix = '.dingding'
-            resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
+            //resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
+            resValue("string", "initUrl", "106.13.82.20:8100")
         }
-        wx{
-            dimension = 'product'
-            manifestPlaceholders = ["appName": "微信Demo","appIcon":"@mipmap/bor"]
-            applicationIdSuffix = '.wx'
-            resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
-        }
-        normal{
-            dimension = 'product'
-            resValue("string", "initUrl", "http://106.13.82.20:8100/ims")
-            manifestPlaceholders = ["appName": "@string/app_name","appIcon":"@mipmap/ic_launcher"]
-        }
+//        wx{
+//            dimension = 'product'
+//            manifestPlaceholders = ["appName": "微信Demo","appIcon":"@mipmap/bor"]
+//            applicationIdSuffix = '.wx'
+//            //resValue("string", "initUrl", "http://106.13.37.230:8100/ims")
+//            resValue("string", "initUrl", "106.13.37.230")
+//        }
+//        normal{
+//            dimension = 'product'
+//            //resValue("string", "initUrl", "http://106.13.82.20:8100/ims")
+//            resValue("string", "initUrl", "106.13.82.20")
+//            manifestPlaceholders = ["appName": "@string/app_name","appIcon":"@mipmap/ic_launcher"]
+//        }
     }
 }
 

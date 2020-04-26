@@ -26,6 +26,7 @@ class UserOperaDao constructor(db: SQLiteDatabase) : AbsTableOpera(db) {
         values.put("address", user.address)
         values.put("lableColor", user.lableColor)
         values.put("loginId", user.loginId)
+        values.put("isTemp", user.isTemp)
         val id = insert(null, values, SQLiteDatabase.CONFLICT_ABORT)
         LogUtil.e(TAG, "插入成功 id=$id")
     }
@@ -66,6 +67,7 @@ class UserOperaDao constructor(db: SQLiteDatabase) : AbsTableOpera(db) {
                     _id = c.getLong(c.getColumnIndex("_id")),
                     nickName = c.getString(c.getColumnIndex("nickName")),
                     sign = c.getString(c.getColumnIndex("sign")),
+                    isTemp = c.getInt(c.getColumnIndex("isTemp")),
                     remark = c.getString(c.getColumnIndex("remark")),
                     address = c.getString(c.getColumnIndex("address")),
                     lableColor = c.getInt(c.getColumnIndex("lableColor")))
@@ -87,6 +89,7 @@ class UserOperaDao constructor(db: SQLiteDatabase) : AbsTableOpera(db) {
                 while(c.moveToNext()){
                     val bean = UserBean(loginId = -1, loginName = "", _id = c.getLong(c.getColumnIndex("_id")),
                         nickName = c.getString(c.getColumnIndex("nickName")),
+                        isTemp = c.getInt(c.getColumnIndex("isTemp")),
                         sign = c.getString(c.getColumnIndex("sign")),
                         remark = c.getString(c.getColumnIndex("remark")),
                         address = c.getString(c.getColumnIndex("address")),
@@ -113,6 +116,7 @@ class UserOperaDao constructor(db: SQLiteDatabase) : AbsTableOpera(db) {
                 while(c.moveToNext()){
                     val bean = UserBean(loginId = -1, loginName = "", _id = c.getLong(c.getColumnIndex("_id")),
                         nickName = c.getString(c.getColumnIndex("nickName")),
+                        isTemp = c.getInt(c.getColumnIndex("isTemp")),
                         sign = c.getString(c.getColumnIndex("sign")),
                         remark = c.getString(c.getColumnIndex("remark")),
                         address = c.getString(c.getColumnIndex("address")),

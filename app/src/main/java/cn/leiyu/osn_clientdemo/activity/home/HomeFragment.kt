@@ -47,6 +47,7 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
     private var page: Int = 1
 
     companion object{
+        var gOperation = ""
         var gPrivateKey = ""//byteArrayOf()
         lateinit var user:UserBean
     }
@@ -73,17 +74,6 @@ class HomeFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<HomeFra
         gPrivateKey = addressUtil.getPrivateKey(user.address)
         userOperaDao = LocalDBManager(mContext!!).getTableOperation(UserOperaDao::class.java)
         readUser()
-
-//        val publicKey = EcKeyUtils.getPulicKeyFromAddressNew(user.address)
-//        val privateKey = EcKeyUtils.getEcPrivateKeyFromHex(gPrivateKey)
-//        val testData = "this is a test";
-//        val sign = EcSignUtil.signData(testData.toByteArray(), privateKey)
-//        val flag = EcSignUtil.verifySign(testData.toByteArray(), publicKey, sign)
-//        val ecData = EcKeyUtils.ECIESEncrypt(publicKey, testData.toByteArray())
-//        val dcData = EcKeyUtils.ECIESDecrypt(privateKey, ecData)
-//        val rData = String(dcData)
-//        val encData = EcKeyUtils.ECEncrypt(publicKey, testData.toByteArray())
-//        val decData = EcKeyUtils.ECDecrypt(privateKey, encData)
     }
 
     @OnItemClick(android.R.id.list)

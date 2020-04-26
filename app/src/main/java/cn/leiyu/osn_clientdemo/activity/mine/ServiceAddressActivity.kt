@@ -9,6 +9,7 @@ import butterknife.BindView
 import cn.leiyu.base.utils.ToastUtil
 import cn.leiyu.base.utils.UrlUtil
 import cn.leiyu.osn_clientdemo.Constant
+import cn.leiyu.osn_clientdemo.IMApp
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.activity.SubBaseActivity
 
@@ -48,16 +49,14 @@ class ServiceAddressActivity : SubBaseActivity() {
             if(getString(R.string.confirm) == topMenu.text.toString().trim()){
                 val host = score.text.toString().trim()
                 //保存信息，验证输入的地址是否符合地址规则
-                if(!checkUrl(host, getString(R.string.setUrl))
-//                        || !checkUrl(candy.text.toString().trim(), getString(R.string.candy_address))
-//                        || !checkUrl(log.text.toString().trim(), getString(R.string.log_address))
-                        ){
-                    return
-                }
+//                if(!checkUrl(host, getString(R.string.setUrl))){
+//                    return
+//                }
                 Constant.API.SERVICE_HOST = host
                 getSharedPreferences(Constant.configFileName, Context.MODE_PRIVATE)
                         .edit().putString(Constant.SERVICE_API, host).apply()
                 showToast(getString(R.string.success_hint, getString(R.string.setUrl)))
+                IMApp.resetSocket()
                 setResult(Activity.RESULT_OK)
                 finish()
             }

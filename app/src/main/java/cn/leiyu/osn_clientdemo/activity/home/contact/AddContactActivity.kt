@@ -14,7 +14,6 @@ import cn.leiyu.base.http.VolleyListenerInterface
 import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.base.utils.LogUtil
 import cn.leiyu.osn_clientdemo.IMApp
-import cn.leiyu.osn_clientdemo.IRequestCallback
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.activity.SubBaseActivity
 import cn.leiyu.osn_clientdemo.activity.home.HomeFragment
@@ -29,7 +28,7 @@ import com.google.zxing.CaptureActivity
 /**
  * 添加联系人
  */
-open class AddContactActivity: SubBaseActivity(), IRequestCallback {
+open class AddContactActivity: SubBaseActivity() {
 
     @BindView(R.id.friendId)
     lateinit var friendId: EditText
@@ -110,35 +109,25 @@ open class AddContactActivity: SubBaseActivity(), IRequestCallback {
     protected open fun checkGroup(v: View){
         if(IMApp.serviceID == ""){
             showToast("服务号为空")
-            setResult(Activity.RESULT_OK)
-            finish()
-            return
         }
-        val login = getUser()
-        addBean = UserBean(loginId = login.loginId, loginName = "",
-            address = HomeFragment.user.address, nickName = friendNick.text.toString().trim(), remark = remark.text.toString().trim(),
-            lableColor = ProductLableUtil.getLableColor())
-        IMApp.addGroup(this, this, addBean, id!!)
-    }
-
-    override fun reqResult(volley: VolleyListenerInterface) {
-        if(volley.result){
-            try {
-                addBean.address = id!![0]
-                LocalDBManager(this).getTableOperation(UserOperaDao::class.java).insertUser(addBean)
-                val bean = GroupBean(id!![0], HomeFragment.user.address, id!![1], id!![2], id!![3], HomeFragment.user.address+";")
-                LocalDBManager(this).getTableOperation(GroupOperaDao::class.java).insertGroup(bean)
-            }
-            catch (e: Exception){
-                e.printStackTrace()
-            }
-            showToast("添加成功")
+        else {
+            val login = getUser()
+            addBean = UserBean(
+                loginId = login.loginId,
+                loginName = "",
+                address = HomeFragment.user.address,
+                nickName = friendNick.text.toString().trim(),
+                remark = remark.text.toString().trim(),
+                lableColor = ProductLableUtil.getLableColor(),
+                isTemp = 0
+            )
+            //IMApp.addGroup(this, this, addBean, id!!)
+            IMApp.addGroup(addBean.nickName, id!![0], id!![1], id!![2], id!![3])
         }
-        else
-            showToast("添加失败")
         setResult(Activity.RESULT_OK)
         finish()
     }
+
     protected open fun checkFriend(v: View){
         //ID必传
         val params = arrayOfNulls<String>(3)
@@ -158,7 +147,7 @@ open class AddContactActivity: SubBaseActivity(), IRequestCallback {
         val login = getUser()
         val bean = UserBean(loginId = login.loginId, loginName = "",
             address = params[0]!!, nickName = params[1]!!, remark = params[2],
-            lableColor = ProductLableUtil.getLableColor())
+            lableColor = ProductLableUtil.getLableColor(), isTemp = 0)
         val hintId = try{
                 //存库
             LocalDBManager(this).getTableOperation(UserOperaDao::class.java).insertUser(bean)

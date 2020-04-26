@@ -70,17 +70,18 @@
             android:adjustViewBounds="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"/>
-<!--        <TextView-->
-<!--            android:id="@+id/createGroup"-->
-<!--            style="@style/wrap"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="20dp"-->
-<!--            android:background="@drawable/bg_white_shape"-->
-<!--            android:paddingLeft="@dimen/dp_10"-->
-<!--            android:paddingTop="@dimen/dp_3"-->
-<!--            android:paddingRight="@dimen/dp_10"-->
-<!--            android:paddingBottom="@dimen/dp_3"-->
-<!--            android:textSize="20sp"-->
-<!--            tools:text="创建群组" />-->
+        <TextView
+            android:id="@+id/flashlight"
+            style="@style/wrap"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_white_shape"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_3"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_3"
+            android:textSize="20sp"
+            tools:text="打开手电筒" />
     </LinearLayout>
 </ScrollView>

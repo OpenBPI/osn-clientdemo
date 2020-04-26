@@ -66,7 +66,7 @@ class LoginLogFragment : SubBaseFragment(), BaseRefreshUtil.IRefreshCallback<Log
                     101)
             }else{
                 if(msgOperaDao == null){
-                    tmp.sendHeart()
+                    //tmp.sendHeart()
                 }
                 queryLocalData(page)
             }

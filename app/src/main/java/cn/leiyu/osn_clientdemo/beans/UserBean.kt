@@ -31,6 +31,7 @@ open class UserBean: LoginBean{
      * 标签颜色
      */
     var lableColor: Int
+    var isTemp: Int
 
     constructor(loginId: Long,
                 loginName: String,
@@ -38,6 +39,7 @@ open class UserBean: LoginBean{
                 nickName: String = "",
                 address: String,
                 sign: String? = "",
+                isTemp: Int = 0,
                 remark: String? = "",
                 lableColor: Int = 0): super(loginId, loginName, address){
         this._id = _id
@@ -45,6 +47,7 @@ open class UserBean: LoginBean{
         this.sign = sign
         this.remark = remark
         this.lableColor = lableColor
+        this.isTemp = isTemp
     }
 
     protected constructor(parcel: Parcel) : super(parcel){
@@ -54,6 +57,7 @@ open class UserBean: LoginBean{
         this.sign = parcel.readString()
         this.remark = parcel.readString()
         this.lableColor = parcel.readInt()
+        this.isTemp = parcel.readInt()
     }
 
 
@@ -65,6 +69,7 @@ open class UserBean: LoginBean{
         parcel.writeString(sign)
         parcel.writeString(remark)
         parcel.writeInt(lableColor)
+        parcel.writeInt(isTemp)
     }
 
     companion object CREATOR : Parcelable.Creator<UserBean> {

@@ -7,8 +7,10 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import cn.leiyu.base.adapter.ImplBaseAdapter
+import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.beans.MsgBean
+import cn.leiyu.osn_clientdemo.beans.UserBean
 import cn.leiyu.osn_clientdemo.utils.ProductLableUtil
 import java.util.*
 
@@ -17,6 +19,7 @@ import java.util.*
  */
 class SendMsgAdapter(context: Context,
                      data: MutableList<MsgBean>,
+                     val userList: MutableList<UserBean>,
                      private val myMsgBean: MsgBean)
     : ImplBaseAdapter<MsgBean>(context, data) {
     /**
@@ -65,10 +68,24 @@ class SendMsgAdapter(context: Context,
             val shap = context.resources.getDrawable(R.drawable.bg_circle) as GradientDrawable
             nick.text = if(myMsgBean.sendId == bean.sendId){
                 shap.setColor(bean.peerLableColor)
-                getName(bean.peerName)
+                //getName(bean.peerName)
+                bean.peerName
             } else{
-                shap.setColor(myMsgBean.peerLableColor)
-                getName(myMsgBean.peerName)
+                if(AddressUtil.isGroup(myMsgBean.peerAddress)){
+                    shap.setColor(myMsgBean.peerLableColor)
+                    var name = ""
+                    for(user in userList){
+                        if(user._id.toInt() == bean.sendId)
+                            name = user.nickName
+                    }
+                    //getName(name)
+                    name
+                }
+                else {
+                    shap.setColor(myMsgBean.peerLableColor)
+                    //getName(myMsgBean.peerName)
+                    myMsgBean.peerName
+                }
             }
             nick.setBackgroundDrawable(shap)
             msg.text = bean.msg

@@ -13,9 +13,14 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import cn.leiyu.base.R
 import cn.leiyu.base.activity.fragment.BaseFragment
 import cn.leiyu.base.utils.ToastUtil
+import android.app.Activity
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import cn.leiyu.base.R
+import java.lang.ref.WeakReference
+
 
 /**
  * 所有自定义Activity的基类
@@ -23,6 +28,16 @@ import cn.leiyu.base.utils.ToastUtil
 abstract class BaseActivity : BaseActivityApi23(), View.OnClickListener{
     protected var mContext: Context? = null
     var baseFragment: BaseFragment? = null
+    companion object {
+        var mCurrentActivity: WeakReference<BaseActivity>? = null
+        open fun updateNotify(){
+            mCurrentActivity?.get().let {
+                it?.runOnUiThread(Runnable {
+                    it.updateView()
+                })
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +57,10 @@ abstract class BaseActivity : BaseActivityApi23(), View.OnClickListener{
         initView()
         initData()
     }
-
+    override fun onResume() {
+        super.onResume()
+        mCurrentActivity = WeakReference(this)
+    }
     fun showToast(msg: String) {
         ToastUtil.showCustomToast(context = this, msg = msg)
     }
@@ -71,6 +89,7 @@ abstract class BaseActivity : BaseActivityApi23(), View.OnClickListener{
      * 初始化数据
      */
     protected abstract fun initData()
+    open fun updateView(){}
 
     fun MIUISetStatusBarLightMode(window: Window, darkmode: Boolean): Boolean {
         val clazz = window::javaClass

@@ -19,6 +19,7 @@ import cn.leiyu.osn_clientdemo.beans.MsgBean
 import cn.leiyu.osn_clientdemo.beans.UserBean
 import cn.leiyu.osn_clientdemo.db.LocalDBManager
 import cn.leiyu.osn_clientdemo.db.tables.GroupOperaDao
+import org.json.JSONArray
 
 /**
  * 通讯录-详细
@@ -63,16 +64,16 @@ class DetailActivity: SubBaseActivity() {
         }
         if(AddressUtil.isGroup(mBean!!.address)){
             val groupBean = LocalDBManager(this).getTableOperation(GroupOperaDao::class.java).query(mBean!!.address)
-            val userList = groupBean!!.userList.split(';')
+            val userList = JSONArray(groupBean!!.userList)
             val users = ArrayList<UserBean>()
-            for(u in userList){
-                if(u.isNotEmpty()) {
-                    val bean = UserBean(0, "user", -1, "user", u)
-                    users.add(bean)
-                }
+            for(i in 0 until userList.length()){
+                val user = userList.getJSONObject(i)
+                val bean = UserBean(0, "", -1, user.getString("name"), user.getString("user"))
+                users.add(bean)
             }
             adapter = ContactAdapter(mContext!!, users, false)
             listView.adapter = adapter
+            txUserList.text = "成员个数 " + users.size.toString();
         }
         else {
             listView.visibility = View.INVISIBLE

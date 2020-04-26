@@ -724,7 +724,6 @@ public class EcKeyUtils {
             short keyLength = (short)((rawData[0]&0xff)|((rawData[1]&0xff)<<8));
             byte[] ecData = new byte[keyLength];
             System.arraycopy(rawData,2,ecData,0,keyLength);
-            LogUtil.e("crypt", bytesToHex(ecData));
             ecData = ECIESDecrypt(privateKey, ecData);
 
             byte[] aesKey = new byte[16];

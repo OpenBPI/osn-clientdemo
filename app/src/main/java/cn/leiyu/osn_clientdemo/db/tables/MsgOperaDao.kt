@@ -79,13 +79,18 @@ class MsgOperaDao(db: SQLiteDatabase): AbsTableOpera(db) {
         return data
     }
 
-    fun query(peerId: Int, user: UserBean, page: Int = 1):MutableList<MsgBean>{
+    fun query(peerId: Int, user: UserBean, isGroup: Boolean = false, page: Int = 1):MutableList<MsgBean>{
         val data = arrayListOf<MsgBean>()
         var c: Cursor? = null
         try{
-            c = query(null, "(sendId = ${user._id} and peerId = $peerId) or (sendId = $peerId and peerId = ${user._id})",
-                null,
-                null, null, "time desc limit ${((page - 1)*Constant.PAGE_SIZE)},${Constant.PAGE_SIZE}")
+            c = if(isGroup)
+                query(null, "peerId = $peerId",
+                    null,
+                    null, null, "time desc limit ${((page - 1)*Constant.PAGE_SIZE)},${Constant.PAGE_SIZE}")
+            else
+                query(null, "(sendId = ${user._id} and peerId = $peerId) or (sendId = $peerId and peerId = ${user._id})",
+                    null,
+                    null, null, "time desc limit ${((page - 1)*Constant.PAGE_SIZE)},${Constant.PAGE_SIZE}")
             c?.let {
                 while (c.moveToNext()){
                     val id = c.getInt(c.getColumnIndex("sendId"))

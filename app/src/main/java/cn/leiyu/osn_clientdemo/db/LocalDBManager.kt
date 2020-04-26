@@ -17,7 +17,7 @@ class LocalDBManager constructor(context: Context)
         db?.execSQL(sql)
         sql = "create table if not exists user(_id Integer PRIMARY KEY autoincrement," +
                 "nickName varchar(20), address text, sign text, remark text," +
-                "lableColor Int, loginId int);"
+                "lableColor Int, loginId int, isTemp int);"
         db?.execSQL(sql)
         sql = "create table if not exists msg(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "sendId Int, peerId Int, msg text, time varchar(25), isRead varchar(1)," +
@@ -25,7 +25,8 @@ class LocalDBManager constructor(context: Context)
         db?.execSQL(sql)
         db?.execSQL("create unique index user_unique_address on user(address, loginId)")
         sql = "create table if not exists groups(_id Integer PRIMARY KEY autoincrement,"+
-                "osnid text, owner text, privateKey text, publicShadow text, privateShadow text, userList text);"
+                "osnid char(160), name nvarchar(20), owner char(160), privateKey char(160), publicShadow char(160), "+
+                "privateShadow char(160), userList text);"
         db?.execSQL(sql)
     }
 

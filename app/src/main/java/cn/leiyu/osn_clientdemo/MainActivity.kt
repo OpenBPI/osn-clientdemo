@@ -21,12 +21,15 @@ import cn.leiyu.osn_clientdemo.activity.home.LoginLogFragment
 import cn.leiyu.osn_clientdemo.activity.home.MineFragment
 import cn.leiyu.osn_clientdemo.adapters.HomePageAdapter
 import cn.leiyu.osn_clientdemo.beans.UserBean
+import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.net.Socket
 
 /**
  * 程序主页
  */
 class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
-    , IRefreshMsgCallback, IRequestCallback{
+    , IRefreshMsgCallback{
 
     /**
      * 发送标志
@@ -63,7 +66,10 @@ class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
         Constant.API.SERVICE_HOST = getSharedPreferences(Constant.configFileName, Context.MODE_PRIVATE)
             .getString(Constant.SERVICE_API, "")!!
 
-        heart = Handler(HeartHandler(this))
+        //heart = Handler(HeartHandler(this))
+        IMApp.initSocket(this)
+        Thread.sleep(100)
+        IMApp.login(userBead)
     }
 
     override fun onResume() {
@@ -108,16 +114,12 @@ class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
     }
 
     internal fun sendHeart(){
-        if(isLogin)
-            IMApp.getMessage(this, this, userBead)
-        else
-            IMApp.login(this, this, userBead)
+//        if(isLogin)
+//            IMApp.getMessage(this, this, userBead)
+//        else
+//            IMApp.login(this, this, userBead)
     }
 
-    override fun reqResult(volley: VolleyListenerInterface) {
-        isLogin = volley.result
-        heart.sendEmptyMessageDelayed(10, Constant.API.GET_MSG.toLong())
-    }
     inner class HeartHandler(context: MainActivity): WeakHandlerCallback<MainActivity>(context){
         override fun handleMessage(msg: Message): Boolean {
             var result = false
@@ -127,11 +129,14 @@ class MainActivity : AbsParentBaseActivity(), ViewPager.OnPageChangeListener
                     result = true
                 }
                 11->{
-                    IMApp.getMessage(getWeakContext()!!, getWeakContext()!!, userBead)
+                    //IMApp.getMessage(getWeakContext()!!, getWeakContext()!!, userBead)
                     result = true
                 }
             }
             return result
         }
+    }
+    override fun updateView(){
+
     }
 }

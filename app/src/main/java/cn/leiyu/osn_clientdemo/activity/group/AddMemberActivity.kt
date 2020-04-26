@@ -7,7 +7,6 @@ import butterknife.BindView
 import butterknife.OnClick
 import cn.leiyu.base.http.VolleyListenerInterface
 import cn.leiyu.osn_clientdemo.IMApp
-import cn.leiyu.osn_clientdemo.IRequestCallback
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.activity.SubBaseActivity
 import cn.leiyu.osn_clientdemo.activity.home.HomeFragment
@@ -15,12 +14,12 @@ import cn.leiyu.osn_clientdemo.adapters.ContactAdapter
 import cn.leiyu.osn_clientdemo.db.LocalDBManager
 import cn.leiyu.osn_clientdemo.db.tables.GroupOperaDao
 import cn.leiyu.osn_clientdemo.db.tables.UserOperaDao
+import org.json.JSONObject
 
-class AddMemberActivity : SubBaseActivity(), IRequestCallback{
+class AddMemberActivity : SubBaseActivity(){
     private var adapter: ContactAdapter? = null
     private lateinit var userOperaDao: UserOperaDao
     private var groupID: String? = null
-    var member = ArrayList<String>()
     @BindView(android.R.id.list)
     lateinit var listView: ListView
 
@@ -47,15 +46,21 @@ class AddMemberActivity : SubBaseActivity(), IRequestCallback{
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.ok->{
-                member.clear()
+                val member = ArrayList<JSONObject>()
                 for(i in adapter!!.selItem.indices){
                     if(adapter!!.selItem[i] == true){
-                        member.add(adapter!!.data[i].address)
+                        val json = JSONObject()
+                        json.put("name", adapter!!.data[i].nickName)
+                        json.put("user", adapter!!.data[i].address)
+                        member.add(json)
                     }
                 }
                 if(member.size != 0){
-                    IMApp.addMember(this, this, groupID!!, member.toTypedArray())
+                    //IMApp.addMember(this, this, groupID!!, member.toTypedArray())
+                    IMApp.addMember(groupID!!, member.toTypedArray())
                 }
+                setResult(Activity.RESULT_OK)
+                finish()
             }
             R.id.cancel->{
                 setResult(Activity.RESULT_OK)
@@ -68,20 +73,5 @@ class AddMemberActivity : SubBaseActivity(), IRequestCallback{
     override fun onBackPressed() {
         setResult(Activity.RESULT_OK)
         super.onBackPressed()
-    }
-
-    override fun reqResult(volley: VolleyListenerInterface) {
-        if(volley.result) {
-            showToast("添加成功")
-//            val groupOperaDao = LocalDBManager(this).getTableOperation(GroupOperaDao::class.java);
-//            val groupBean = groupOperaDao.query(groupID!!)
-//            for(o in member)
-//                groupBean!!.userList += o + ";"
-//            groupOperaDao.update(groupBean!!)
-        }
-        else
-            showToast("添加失败")
-        setResult(Activity.RESULT_OK)
-        finish()
     }
 }

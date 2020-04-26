@@ -4,20 +4,20 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
+import android.hardware.camera2.CameraManager
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getSystemService
 import butterknife.BindView
 import butterknife.OnClick
 import cn.leiyu.base.activity.BaseActivity
-import cn.leiyu.base.utils.AddressUtil
 import cn.leiyu.osn_clientdemo.Constant
 import cn.leiyu.osn_clientdemo.R
 import cn.leiyu.osn_clientdemo.activity.AbsParentBaseActivity
 import cn.leiyu.osn_clientdemo.activity.SubBaseFragment
-import cn.leiyu.osn_clientdemo.activity.home.contact.AddContactActivity
 import cn.leiyu.osn_clientdemo.activity.mine.ServiceAddressActivity
 import cn.leiyu.osn_clientdemo.beans.UserBean
 import cn.leiyu.osn_clientdemo.db.LocalDBManager
@@ -26,6 +26,8 @@ import com.google.gson.Gson
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.google.zxing.utils.BitMatrix2BitmapUtil
+
+
 
 /**
  * 主界面 - 我布局
@@ -46,7 +48,11 @@ class MineFragment : SubBaseFragment() {
     lateinit var sign: TextView
     @BindView(R.id.d2img)
     lateinit var d2Img: ImageView
+    @BindView(R.id.flashlight)
+    lateinit var flashLight: TextView
     lateinit var alertContent: EditText
+    lateinit var mCameraManager: CameraManager
+    var isFLOpen = false
 
     private lateinit var user: UserBean
 
@@ -58,6 +64,7 @@ class MineFragment : SubBaseFragment() {
         super.initView()
         userName.text = getString(R.string.mine_title)
         url.text = getString(R.string.setConnection)
+        flashLight.text = "打开手电筒"
         nouse.visibility = View.INVISIBLE
         initData()
     }
@@ -69,9 +76,10 @@ class MineFragment : SubBaseFragment() {
             sign.text = user.sign
             create2d()
         }
+        mCameraManager = getSystemService(activity!!.applicationContext, CameraManager::class.java) as CameraManager
     }
 
-    @OnClick(R.id.opera, R.id.nickName, R.id.sign)
+    @OnClick(R.id.opera, R.id.nickName, R.id.sign, R.id.flashlight)
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.opera->{
@@ -100,6 +108,16 @@ class MineFragment : SubBaseFragment() {
                         user.sign = sign.text.toString().trim()
                         saveData(user)
                     }
+                }
+            }
+            R.id.flashlight->{
+                try {
+                    val cid = mCameraManager.cameraIdList[0]
+                    isFLOpen = !isFLOpen
+                    mCameraManager.setTorchMode(cid, isFLOpen)
+                }
+                catch (e:Exception){
+                    e.printStackTrace()
                 }
             }
             else -> super.onClick(v)
